@@ -1,0 +1,24 @@
+{{outlet}}
+X: <select onchange={{action "xchangeListener" value="target.value"}}>
+  {{#each xVars as |value|}}
+    <option value={{value}}>{{value}}</option>
+  {{/each}}
+</select>
+<br>
+Y: <input type="text" onchange={{action "ychangeListener" value="target.value"}}>
+<br>
+R: <select onchange={{action "rchangeListener" value="target.value"}}>
+  {{#each xVars as |value|}}
+    <option value={{value}}>{{value}}</option>
+  {{/each}}
+</select>
+<br>
+<input type="button" onclick={{action "sendPoint" }} value="Check point"/>
+{{#each points as |point|}}
+X: {{point.x}}<br>
+Y: {{point.y}}<br>
+R: {{point.r}}<br>
+isIn: {point.isIn}}<br>
+  <br>
+{{/each}}
+

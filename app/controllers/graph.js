@@ -1,5 +1,5 @@
 import Ember from 'ember';
-
+//TODO: add validation
 export default Ember.Controller.extend({
    xVars: ["-3",
     "-2",
@@ -13,7 +13,7 @@ export default Ember.Controller.extend({
   ],
   xInp:"",
   yInp:"",
-  rInp:"",
+  rInp: 1,
   points: Ember.computed(function () {
     return this.get('store').findAll('point');
   }),
@@ -33,6 +33,8 @@ export default Ember.Controller.extend({
           y: this.get('yInp'),
           r: this.get('rInp'),
         }).save();
-     }
-  }
+     },
+
+  },
+
 });

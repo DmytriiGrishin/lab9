@@ -1,4 +1,18 @@
 {{outlet}}
+<script>
+  function drawPoint(context, x, y, isInside){
+    context.beginPath();
+    if(isInside){
+      context.fillStyle = "Green";
+    } else {
+      context.fillStyle = "Black";
+    }
+    context.arc(x, y, 3, 0*Math.PI, 2*Math.PI);
+    context.fill();
+  }
+</script>
+{{canvas-graph r=rInp}}
+<br>
 X: <select onchange={{action "xchangeListener" value="target.value"}}>
   {{#each xVars as |value|}}
     <option value={{value}}>{{value}}</option>
@@ -14,11 +28,3 @@ R: <select onchange={{action "rchangeListener" value="target.value"}}>
 </select>
 <br>
 <input type="button" onclick={{action "sendPoint" }} value="Check point"/>
-{{#each points as |point|}}
-X: {{point.x}}<br>
-Y: {{point.y}}<br>
-R: {{point.r}}<br>
-isIn: {point.isIn}}<br>
-  <br>
-{{/each}}
-

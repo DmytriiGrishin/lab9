@@ -559,7 +559,7 @@ define("lab9/templates/ind", ["exports"], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "jumipWM/", "block": "{\"statements\":[[0,\"\\n\"],[11,\"h1\",[]],[13],[0,\"LAB 9\"],[14],[0,\"\\n\"],[11,\"h2\",[]],[13],[0,\"Grishin Dmitrii And Norin Evgeniy\"],[14],[0,\"\\n\"],[11,\"h3\",[]],[13],[0,\" 1034 \"],[14],[0,\"\\n\"],[1,[26,[\"login-form\"]],false],[0,\"\\n\"],[1,[26,[\"outlet\"]],false]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/ind.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "Ldy8cmhh", "block": "{\"statements\":[[0,\"\\n\"],[11,\"h1\",[]],[13],[0,\"LAB 9\"],[14],[0,\"\\n\"],[11,\"h2\",[]],[13],[0,\"Grishin Dmitrii And Norin Evgeniy\"],[14],[0,\"\\n\"],[11,\"h3\",[]],[13],[0,\" 1034 \"],[14],[0,\"\\n\"],[6,[\"link-to\"],[\"graph\"],null,{\"statements\":[[0,\"GRAPH\"]],\"locals\":[]},null],[0,\"\\n\"],[1,[26,[\"outlet\"]],false]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/ind.hbs" } });
 });
 define("lab9/templates/login", ["exports"], function (exports) {
   "use strict";
@@ -599,6 +599,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+b7df003c"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+a6b7804b"});
 }
 //# sourceMappingURL=lab9.map

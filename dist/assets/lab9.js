@@ -78,116 +78,113 @@ define("lab9/components/canvas-graph", ["exports", "ember"], function (exports, 
     value: true
   });
   exports.default = _ember.default.Component.extend({
-    actions: {
-      drawPoints: function drawPoints() {
-        var context = document.getElementById("graph").getContext("2d");
-        var points = this.get("store").findAll("point");
-        points.forEach(function (point) {
-          var x = point.x * 50 + 200;
-          var y = point.y * 50 + 200;
-          var isInside = point.isIn;
-          context.beginPath();
-          if (isInside) {
-            context.fillStyle = "Green";
-          } else {
-            context.fillStyle = "Black";
-          }
-          context.arc(x, y, 3, 0 * Math.PI, 2 * Math.PI);
-          context.fill();
-        });
-      },
-      drawCanvas: function drawCanvas() {
-        function drawCoordinates(context, r) {
-          var pixel_transform = 50;
-          context.beginPath();
-          /*Draw coordianates*/
-          context.moveTo(200, 200);
-          context.lineTo(200, 0);
-          context.lineTo(205, 5);
-          context.moveTo(200, 0);
-          context.lineTo(195, 5);
-          context.moveTo(0, 200);
-          context.lineTo(200, 200);
-          context.lineTo(200, 400);
-          context.moveTo(200, 200);
-          context.lineTo(400, 200);
-          context.lineTo(395, 205);
-          context.moveTo(400, 200);
-          context.lineTo(395, 195);
-          context.moveTo(0, 200);
-          if (r > 0) {
-            var pix = r * pixel_transform;
-            /*Draw measures*/
-            var i = void 0;
-            for (i = 200 + pix; i >= 200 - pix; i -= pix / 2) {
-              context.moveTo(195, i);
-              context.lineTo(205, i);
-              context.moveTo(i, 195);
-              context.lineTo(i, 205);
-            }
-          }
-          context.strokeStyle = "black";
-          context.stroke();
-          /*Draw coordinates text*/
-          context.font = "16px Georgia";
-          context.textBaseline = "top";
-          context.textAlign = "left";
-          context.fillStyle = "black";
-          context.fillText("Y", 210, 0);
-          context.textAlign = "right";
-          context.textBaseline = "bottom";
-          context.fillText("X", 400, 190);
+    drawPoints: function drawPoints() {
+      var context = document.getElementById("graph").getContext("2d");
+      var points = this.get("store").findAll("point");
+      points.forEach(function (point) {
+        var x = point.x * 50 + 200;
+        var y = point.y * 50 + 200;
+        var isInside = point.isIn;
+        context.beginPath();
+        if (isInside) {
+          context.fillStyle = "Green";
+        } else {
+          context.fillStyle = "Black";
         }
-
-        function drawFigure(context, r) {
-
-          var pixel_transform = 50;
-          /*Arc fill*/
-          context.beginPath();
-          context.arc(199, 201, r / 2 * pixel_transform, 0.5 * Math.PI, Math.PI);
-          context.moveTo(199 - r / 2 * pixel_transform, 201);
-          context.lineTo(199, 201);
-          context.lineTo(199, 201 + r / 2 * pixel_transform);
-          /*Triangle fill*/
-          context.moveTo(199 - r / 2 * pixel_transform, 199);
-          context.lineTo(199, 199);
-          context.lineTo(199, 199 - r * pixel_transform);
-          context.lineTo(199 - r / 2 * pixel_transform, 199);
-          /*Rectangle fill */
-          context.rect(201, 201, r * pixel_transform, r / 2 * pixel_transform);
-          context.closePath();
-          context.fillStyle = "#5c99ED";
-          context.fill();
-          /*Figure Draw End*/
-        }
-        function canvasFill(r) {
-          var canvas = document.getElementById("graph");
-
-          var context = canvas.getContext("2d");
-          context.clearRect(0, 0, canvas.width, canvas.height);
-          if (r > 0) {
-            drawFigure(context, r);
-          }
-          drawCoordinates(context, r);
-        }
-        canvasFill(this.get("r"));
-      }
-    },
-    click: function click(event) {
-      var x = (event.clientX - 8 - 200) / 50;
-      var y = (event.clientY - 8 - 200) / 50;
-      this.get("store").createRecord("point", {
-        x: x,
-        y: y,
-        r: this.get("r")
-      }).save();
-
-      this.triggerAction({
-        action: 'drawPoints',
-        target: this
+        context.arc(x, y, 3, 0 * Math.PI, 2 * Math.PI);
+        context.fill();
       });
-    }
-  });
+      this.get('drawCanvas')();
+    },
+    drawCanvas: function drawCanvas() {
+      function drawCoordinates(context, r) {
+        var pixel_transform = 50;
+        context.beginPath();
+        /*Draw coordianates*/
+        context.moveTo(200, 200);
+        context.lineTo(200, 0);
+        context.lineTo(205, 5);
+        context.moveTo(200, 0);
+        context.lineTo(195, 5);
+        context.moveTo(0, 200);
+        context.lineTo(200, 200);
+        context.lineTo(200, 400);
+        context.moveTo(200, 200);
+        context.lineTo(400, 200);
+        context.lineTo(395, 205);
+        context.moveTo(400, 200);
+        context.lineTo(395, 195);
+        context.moveTo(0, 200);
+        if (r > 0) {
+          var pix = r * pixel_transform;
+          /*Draw measures*/
+          var i = void 0;
+          for (i = 200 + pix; i >= 200 - pix; i -= pix / 2) {
+            context.moveTo(195, i);
+            context.lineTo(205, i);
+            context.moveTo(i, 195);
+            context.lineTo(i, 205);
+          }
+        }
+        context.strokeStyle = "black";
+        context.stroke();
+        /*Draw coordinates text*/
+        context.font = "16px Georgia";
+        context.textBaseline = "top";
+        context.textAlign = "left";
+        context.fillStyle = "black";
+        context.fillText("Y", 210, 0);
+        context.textAlign = "right";
+        context.textBaseline = "bottom";
+        context.fillText("X", 400, 190);
+      }
+
+      function drawFigure(context, r) {
+
+        var pixel_transform = 50;
+        /*Arc fill*/
+        context.beginPath();
+        context.arc(199, 201, r / 2 * pixel_transform, 0.5 * Math.PI, Math.PI);
+        context.moveTo(199 - r / 2 * pixel_transform, 201);
+        context.lineTo(199, 201);
+        context.lineTo(199, 201 + r / 2 * pixel_transform);
+        /*Triangle fill*/
+        context.moveTo(199 - r / 2 * pixel_transform, 199);
+        context.lineTo(199, 199);
+        context.lineTo(199, 199 - r * pixel_transform);
+        context.lineTo(199 - r / 2 * pixel_transform, 199);
+        /*Rectangle fill */
+        context.rect(201, 201, r * pixel_transform, r / 2 * pixel_transform);
+        context.closePath();
+        context.fillStyle = "#5c99ED";
+        context.fill();
+        /*Figure Draw End*/
+      }
+      function canvasFill(r) {
+        var canvas = document.getElementById("graph");
+
+        var context = canvas.getContext("2d");
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        if (r > 0) {
+          drawFigure(context, r);
+        }
+        drawCoordinates(context, r);
+      }
+      canvasFill(this.get("r"));
+    },
+    actions: {
+      click: function click(event) {
+        var x = (event.clientX - 8 - 200) / 50;
+        var y = (event.clientY - 8 - 200) / 50;
+        this.get("store").createRecord("point", {
+          x: x,
+          y: y,
+          r: this.get("r")
+        }).save();
+
+        this.get("drawCanvas")();
+      }
+    } });
 });
 define('lab9/components/list-of-points', ['exports', 'ember'], function (exports, _ember) {
   'use strict';
@@ -264,106 +261,103 @@ define("lab9/controllers/graph", ["exports", "ember"], function (exports, _ember
     points: _ember.default.computed(function () {
       return this.get('store').findAll('point');
     }),
+    drawPoints: function drawPoints(ths) {
+      ths.get('drawCanvas')(ths);
+      var context = document.getElementById("graph").getContext("2d");
+      var points = ths.get("points");
+      points.forEach(function (point) {
+        var x = point.x * 50 + 200;
+        var y = point.y * 50 + 200;
+        var isInside = point.isIn;
+        context.beginPath();
+        if (isInside) {
+          context.fillStyle = "Green";
+        } else {
+          context.fillStyle = "Black";
+        }
+        context.arc(x, y, 3, 0 * Math.PI, 2 * Math.PI);
+        context.fill();
+      });
+    },
+    drawCanvas: function drawCanvas(ths) {
+      function drawCoordinates(context, r) {
+        var pixel_transform = 50;
+        context.beginPath();
+        /*Draw coordianates*/
+        context.moveTo(200, 200);
+        context.lineTo(200, 0);
+        context.lineTo(205, 5);
+        context.moveTo(200, 0);
+        context.lineTo(195, 5);
+        context.moveTo(0, 200);
+        context.lineTo(200, 200);
+        context.lineTo(200, 400);
+        context.moveTo(200, 200);
+        context.lineTo(400, 200);
+        context.lineTo(395, 205);
+        context.moveTo(400, 200);
+        context.lineTo(395, 195);
+        context.moveTo(0, 200);
+        if (r > 0) {
+          var pix = r * pixel_transform;
+          /*Draw measures*/
+          var i = void 0;
+          for (i = 200 + pix; i >= 200 - pix; i -= pix / 2) {
+            context.moveTo(195, i);
+            context.lineTo(205, i);
+            context.moveTo(i, 195);
+            context.lineTo(i, 205);
+          }
+        }
+        context.strokeStyle = "black";
+        context.stroke();
+        /*Draw coordinates text*/
+        context.font = "16px Georgia";
+        context.textBaseline = "top";
+        context.textAlign = "left";
+        context.fillStyle = "black";
+        context.fillText("Y", 210, 0);
+        context.textAlign = "right";
+        context.textBaseline = "bottom";
+        context.fillText("X", 400, 190);
+      }
+
+      function drawFigure(context, r) {
+
+        var pixel_transform = 50;
+        /*Arc fill*/
+        context.beginPath();
+        context.arc(199, 201, r / 2 * pixel_transform, 0.5 * Math.PI, Math.PI);
+        context.moveTo(199 - r / 2 * pixel_transform, 201);
+        context.lineTo(199, 201);
+        context.lineTo(199, 201 + r / 2 * pixel_transform);
+        /*Triangle fill*/
+        context.moveTo(199 - r / 2 * pixel_transform, 199);
+        context.lineTo(199, 199);
+        context.lineTo(199, 199 - r * pixel_transform);
+        context.lineTo(199 - r / 2 * pixel_transform, 199);
+        /*Rectangle fill */
+        context.rect(201, 201, r * pixel_transform, r / 2 * pixel_transform);
+        context.closePath();
+        context.fillStyle = "#5c99ED";
+        context.fill();
+        /*Figure Draw End*/
+      }
+
+      function canvasFill(r) {
+        var canvas = document.getElementById("graph");
+
+        var context = canvas.getContext("2d");
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        if (r > 0) {
+          drawFigure(context, r);
+        }
+        drawCoordinates(context, r);
+      }
+
+      canvasFill(ths.get("rInp"));
+    },
     actions: {
-      drawPoints: function drawPoints() {
-        this.triggerAction({
-          action: 'drawCanvas',
-          target: this
-        });
-        var context = document.getElementById("graph").getContext("2d");
-        var points = this.get("points");
-        points.forEach(function (point) {
-          var x = point.x * 50 + 200;
-          var y = point.y * 50 + 200;
-          var isInside = point.isIn;
-          context.beginPath();
-          if (isInside) {
-            context.fillStyle = "Green";
-          } else {
-            context.fillStyle = "Black";
-          }
-          context.arc(x, y, 3, 0 * Math.PI, 2 * Math.PI);
-          context.fill();
-        });
-      },
-      drawCanvas: function drawCanvas() {
-        function drawCoordinates(context, r) {
-          var pixel_transform = 50;
-          context.beginPath();
-          /*Draw coordianates*/
-          context.moveTo(200, 200);
-          context.lineTo(200, 0);
-          context.lineTo(205, 5);
-          context.moveTo(200, 0);
-          context.lineTo(195, 5);
-          context.moveTo(0, 200);
-          context.lineTo(200, 200);
-          context.lineTo(200, 400);
-          context.moveTo(200, 200);
-          context.lineTo(400, 200);
-          context.lineTo(395, 205);
-          context.moveTo(400, 200);
-          context.lineTo(395, 195);
-          context.moveTo(0, 200);
-          if (r > 0) {
-            var pix = r * pixel_transform;
-            /*Draw measures*/
-            var i = void 0;
-            for (i = 200 + pix; i >= 200 - pix; i -= pix / 2) {
-              context.moveTo(195, i);
-              context.lineTo(205, i);
-              context.moveTo(i, 195);
-              context.lineTo(i, 205);
-            }
-          }
-          context.strokeStyle = "black";
-          context.stroke();
-          /*Draw coordinates text*/
-          context.font = "16px Georgia";
-          context.textBaseline = "top";
-          context.textAlign = "left";
-          context.fillStyle = "black";
-          context.fillText("Y", 210, 0);
-          context.textAlign = "right";
-          context.textBaseline = "bottom";
-          context.fillText("X", 400, 190);
-        }
-
-        function drawFigure(context, r) {
-
-          var pixel_transform = 50;
-          /*Arc fill*/
-          context.beginPath();
-          context.arc(199, 201, r / 2 * pixel_transform, 0.5 * Math.PI, Math.PI);
-          context.moveTo(199 - r / 2 * pixel_transform, 201);
-          context.lineTo(199, 201);
-          context.lineTo(199, 201 + r / 2 * pixel_transform);
-          /*Triangle fill*/
-          context.moveTo(199 - r / 2 * pixel_transform, 199);
-          context.lineTo(199, 199);
-          context.lineTo(199, 199 - r * pixel_transform);
-          context.lineTo(199 - r / 2 * pixel_transform, 199);
-          /*Rectangle fill */
-          context.rect(201, 201, r * pixel_transform, r / 2 * pixel_transform);
-          context.closePath();
-          context.fillStyle = "#5c99ED";
-          context.fill();
-          /*Figure Draw End*/
-        }
-
-        function canvasFill(r) {
-          var canvas = document.getElementById("graph");
-
-          var context = canvas.getContext("2d");
-          context.clearRect(0, 0, canvas.width, canvas.height);
-          if (r > 0) {
-            drawFigure(context, r);
-          }
-          drawCoordinates(context, r);
-        }
-
-        canvasFill(this.get("r"));
-      },
       xchangeListener: function xchangeListener(xInp) {
         this.set('xInp', xInp);
       },
@@ -375,10 +369,7 @@ define("lab9/controllers/graph", ["exports", "ember"], function (exports, _ember
           this.set("rerrorMesag", null);
           this.set('rInp', rInp);
         }
-        this.triggerAction({
-          action: 'drawPoints',
-          target: this
-        });
+        this.get('drawPoints')(this);
       },
       ychangeListener: function ychangeListener(yInp) {
         this.set('yInp', yInp);
@@ -407,13 +398,10 @@ define("lab9/controllers/graph", ["exports", "ember"], function (exports, _ember
         this.get("store").createRecord("point", {
           x: x,
           y: y,
-          r: this.get("r")
+          r: this.get("rInp")
         }).save();
 
-        this.triggerAction({
-          action: 'drawPoints',
-          target: this
-        });
+        this.get('drawPoints')(this);
       }
     }
   });
@@ -820,6 +808,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+1a0574fd"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+bbb25d86"});
 }
 //# sourceMappingURL=lab9.map

@@ -2,6 +2,35 @@
 
 
 
+define("lab9/adapters/application", ["exports", "ember-data"], function (exports, _emberData) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _emberData.default.JSONAPIAdapter.extend({
+    headers: function () {
+      var jwt = document.cookie.match(new RegExp("(?:^|; )" + "jwt".replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
+      return { "jwt": jwt };
+    }.property().volatile()
+  });
+});
+define('lab9/adapters/point', ['exports', 'lab9/adapters/application'], function (exports, _application) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _application.default.extend({});
+});
+define('lab9/adapters/user', ['exports', 'lab9/adapters/application'], function (exports, _application) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _application.default.extend({});
+});
 define('lab9/app', ['exports', 'ember', 'lab9/resolver', 'ember-load-initializers', 'lab9/config/environment'], function (exports, _ember, _resolver, _emberLoadInitializers, _environment) {
   'use strict';
 
@@ -119,7 +148,6 @@ define('lab9/components/canvas-graph', ['exports', 'ember'], function (exports, 
     },
     store: _ember.default.inject.service(),
     click: function click(event) {
-      alert(this.get("r"));
       var x = (event.clientX - 8 - 200) / 50;
       var y = (event.clientY - 8 - 200) / 50;
       this.get("store").createRecord("point", {
@@ -144,24 +172,43 @@ define('lab9/components/list-of-points', ['exports', 'ember'], function (exports
   exports.default = _ember.default.Component.extend({});
 });
 define("lab9/components/login-form", ["exports", "ember"], function (exports, _ember) {
-    "use strict";
+  "use strict";
 
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    exports.default = _ember.default.Component.extend({
-        username: "",
-        password: "",
-        actions: {
-            userLogin: function userLogin() {
-                this.get("store").createRecord('user', {
-                    username: this.get("username"),
-                    password: this.get("password")
-                });
-            }
-        }
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Component.extend({
+    username: "",
+    password: "",
+    isError: false,
+    actions: {
+      nameChanged: function nameChanged(value) {
+        this.set('username', value);
+      },
+      passChanged: function passChanged(value) {
+        this.set('password', value);
+      },
 
-    });
+      userLogin: function userLogin() {
+        var username = this.get('username');
+        var password = this.get('password');
+        var ths = this;
+        _ember.default.$.ajax({
+          type: 'GET',
+          url: '/login?username=' + username + '&pass=' + password,
+          success: function success(response) {
+            ths.set("isError", false);
+            document.cookie = "jwt=" + JSON.parse(response.responseText).jwt;
+            ths.get("onLogin")();
+          },
+          error: function error() {
+            ths.set("isError", true);
+          }
+        });
+      }
+    }
+
+  });
 });
 define('lab9/components/welcome-page', ['exports', 'ember-welcome-page/components/welcome-page'], function (exports, _welcomePage) {
   'use strict';
@@ -184,31 +231,62 @@ define("lab9/controllers/graph", ["exports", "ember"], function (exports, _ember
   });
   exports.default = _ember.default.Controller.extend({
     xVars: ["-3", "-2", "-1", "0", "1", "2", "3", "4", "5"],
-    xInp: "",
+    xInp: "-3",
     yInp: "",
     rInp: 1,
+    rerrorMesag: "R must be 1 or greater. Set 1 by default",
     points: _ember.default.computed(function () {
-      return this.get('store').findAll('point');
+      return this.get('store').peekAll('point');
     }),
     actions: {
       xchangeListener: function xchangeListener(xInp) {
         this.set('xInp', xInp);
       },
       rchangeListener: function rchangeListener(rInp) {
-        this.set('rInp', rInp);
+        if (!(rInp > 0)) {
+          this.set("rerrorMesag", "R must be 1 or greater. Set 1 by default");
+          this.set("rInp", 1);
+        } else {
+          this.set("rerrorMesag", null);
+          this.set('rInp', rInp);
+        }
       },
       ychangeListener: function ychangeListener(xInp) {
         this.set('yInp', xInp);
       },
       sendPoint: function sendPoint() {
-        this.get("store").createRecord('point', {
-          x: this.get('xInp'),
-          y: this.get('yInp'),
-          r: this.get('rInp')
-        }).save();
+        if (this.get("rInp") > 0) {
+          this.set("rerrorMesag", null);
+          if (this.get("yInp").isNumber && this.get("yInp") >= -3 && this.get("yInp") <= 3) {
+            this.set('yerrorMesag', null);
+            this.get("store").createRecord('point', {
+              x: this.get('xInp'),
+              y: this.get('yInp'),
+              r: this.get('rInp')
+            }).save();
+          } else {
+            this.set('yerrorMesag', "Y must be in (-3..3) range");
+          }
+        } else {
+          this.set("rerrorMesag", "R must be 1 or greater");
+        }
       }
     }
 
+  });
+});
+define('lab9/controllers/ind', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Controller.extend({
+    actions: {
+      toGraph: function toGraph() {
+        this.transitionToRoute('graph');
+      }
+    }
   });
 });
 define('lab9/helpers/app-version', ['exports', 'ember', 'lab9/config/environment', 'ember-cli-app-version/utils/regexp'], function (exports, _ember, _environment, _regexp) {
@@ -543,7 +621,7 @@ define("lab9/templates/components/login-form", ["exports"], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "oC4uLVM3", "block": "{\"statements\":[[11,\"input\",[]],[15,\"type\",\"text\"],[16,\"value\",[34,[[26,[\"urername\"]]]]],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"text\"],[16,\"value\",[34,[[26,[\"password\"]]]]],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"button\"],[16,\"onclick\",[34,[[33,[\"action\"],[[28,[null]],[28,[\"userLogin\"]]],null]]]],[13],[14],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/components/login-form.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "kiy2GHDW", "block": "{\"statements\":[[11,\"input\",[]],[15,\"type\",\"text\"],[16,\"value\",[34,[[26,[\"urername\"]]]]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"nameChanged\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"text\"],[16,\"value\",[34,[[26,[\"password\"]]]]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"passChanged\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[11,\"br\",[]],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"button\"],[15,\"value\",\"Log in\"],[5,[\"action\"],[[28,[null]],\"userLogin\"]],[13],[14],[0,\"\\n\"],[6,[\"if\"],[[28,[\"isError\"]]],null,{\"statements\":[[0,\"  \"],[11,\"div\",[]],[13],[0,\"Can't log in!\"],[14],[0,\"\\n\"]],\"locals\":[]},null],[1,[26,[\"outlet\"]],false],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/components/login-form.hbs" } });
 });
 define("lab9/templates/graph", ["exports"], function (exports) {
   "use strict";
@@ -551,7 +629,7 @@ define("lab9/templates/graph", ["exports"], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "sFV8JiVQ", "block": "{\"statements\":[[1,[26,[\"outlet\"]],false],[0,\"\\n\"],[11,\"script\",[]],[13],[0,\"\\n  function drawPoint(context, x, y, isInside){\\n    context.beginPath();\\n    if(isInside){\\n      context.fillStyle = \\\"Green\\\";\\n    } else {\\n      context.fillStyle = \\\"Black\\\";\\n    }\\n    context.arc(x, y, 3, 0*Math.PI, 2*Math.PI);\\n    context.fill();\\n  }\\n\"],[14],[0,\"\\n\"],[1,[33,[\"canvas-graph\"],null,[[\"r\"],[[28,[\"rInp\"]]]]],false],[0,\"\\n\"],[11,\"br\",[]],[13],[14],[0,\"\\nX: \"],[11,\"select\",[]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"xchangeListener\"],[[\"value\"],[\"target.value\"]]],null],[13],[0,\"\\n\"],[6,[\"each\"],[[28,[\"xVars\"]]],null,{\"statements\":[[0,\"    \"],[11,\"option\",[]],[16,\"value\",[28,[\"value\"]],null],[13],[1,[28,[\"value\"]],false],[14],[0,\"\\n\"]],\"locals\":[\"value\"]},null],[14],[0,\"\\n\"],[11,\"br\",[]],[13],[14],[0,\"\\nY: \"],[11,\"input\",[]],[15,\"type\",\"text\"],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"ychangeListener\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[0,\"\\n\"],[11,\"br\",[]],[13],[14],[0,\"\\nR: \"],[11,\"select\",[]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"rchangeListener\"],[[\"value\"],[\"target.value\"]]],null],[13],[0,\"\\n\"],[6,[\"each\"],[[28,[\"xVars\"]]],null,{\"statements\":[[0,\"    \"],[11,\"option\",[]],[16,\"value\",[28,[\"value\"]],null],[13],[1,[28,[\"value\"]],false],[14],[0,\"\\n\"]],\"locals\":[\"value\"]},null],[14],[0,\"\\n\"],[11,\"br\",[]],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"button\"],[16,\"onclick\",[33,[\"action\"],[[28,[null]],\"sendPoint\"],null],null],[15,\"value\",\"Check point\"],[13],[14],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/graph.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "4YvrogTb", "block": "{\"statements\":[[1,[26,[\"outlet\"]],false],[0,\"\\n\"],[11,\"script\",[]],[13],[0,\"\\n  function drawPoint(context, x, y, isInside){\\n    context.beginPath();\\n    if(isInside){\\n      context.fillStyle = \\\"Green\\\";\\n    } else {\\n      context.fillStyle = \\\"Black\\\";\\n    }\\n    context.arc(x, y, 3, 0*Math.PI, 2*Math.PI);\\n    context.fill();\\n  }\\n\"],[14],[0,\"\\n\"],[1,[33,[\"canvas-graph\"],null,[[\"r\"],[[28,[\"rInp\"]]]]],false],[0,\"\\n\"],[11,\"br\",[]],[13],[14],[0,\"\\nX: \"],[11,\"select\",[]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"xchangeListener\"],[[\"value\"],[\"target.value\"]]],null],[13],[0,\"\\n\"],[6,[\"each\"],[[28,[\"xVars\"]]],null,{\"statements\":[[0,\"    \"],[11,\"option\",[]],[16,\"value\",[28,[\"value\"]],null],[13],[1,[28,[\"value\"]],false],[14],[0,\"\\n\"]],\"locals\":[\"value\"]},null],[14],[0,\"\\n\"],[11,\"br\",[]],[13],[14],[0,\"\\nY: \"],[11,\"input\",[]],[15,\"type\",\"text\"],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"ychangeListener\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[11,\"div\",[]],[15,\"color\",\"RED\"],[13],[1,[26,[\"yerrorMesag\"]],false],[14],[0,\"\\nR: \"],[11,\"select\",[]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"rchangeListener\"],[[\"value\"],[\"target.value\"]]],null],[13],[0,\"\\n\"],[6,[\"each\"],[[28,[\"xVars\"]]],null,{\"statements\":[[0,\"    \"],[11,\"option\",[]],[16,\"value\",[28,[\"value\"]],null],[13],[1,[28,[\"value\"]],false],[14],[0,\"\\n\"]],\"locals\":[\"value\"]},null],[14],[11,\"div\",[]],[15,\"color\",\"RED\"],[13],[1,[26,[\"rerrorMesag\"]],false],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"button\"],[16,\"onclick\",[33,[\"action\"],[[28,[null]],\"sendPoint\"],null],null],[15,\"value\",\"Check point\"],[13],[14],[0,\"\\n\"],[11,\"table\",[]],[13],[0,\"\\n\"],[6,[\"if\"],[[28,[\"points\"]]],null,{\"statements\":[[0,\"    \"],[11,\"tr\",[]],[13],[0,\"\\n      \"],[11,\"th\",[]],[13],[0,\"X\"],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[0,\"Y\"],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[0,\"R\"],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[0,\"is Included\"],[14],[0,\"\\n    \"],[14],[0,\"\\n\"],[6,[\"each\"],[[28,[\"points\"]]],null,{\"statements\":[[0,\"      \"],[11,\"tr\",[]],[13],[0,\"\\n      \"],[11,\"th\",[]],[13],[1,[28,[\"point\",\"x\"]],false],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[1,[28,[\"point\",\"y\"]],false],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[1,[28,[\"point\",\"r\"]],false],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[1,[28,[\"point\",\"isIn\"]],false],[14],[0,\"\\n      \"],[14],[0,\"\\n\"]],\"locals\":[\"point\"]},null]],\"locals\":[]},null],[14]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/graph.hbs" } });
 });
 define("lab9/templates/ind", ["exports"], function (exports) {
   "use strict";
@@ -559,7 +637,7 @@ define("lab9/templates/ind", ["exports"], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "Ldy8cmhh", "block": "{\"statements\":[[0,\"\\n\"],[11,\"h1\",[]],[13],[0,\"LAB 9\"],[14],[0,\"\\n\"],[11,\"h2\",[]],[13],[0,\"Grishin Dmitrii And Norin Evgeniy\"],[14],[0,\"\\n\"],[11,\"h3\",[]],[13],[0,\" 1034 \"],[14],[0,\"\\n\"],[6,[\"link-to\"],[\"graph\"],null,{\"statements\":[[0,\"GRAPH\"]],\"locals\":[]},null],[0,\"\\n\"],[1,[26,[\"outlet\"]],false]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/ind.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "lkjdnkbG", "block": "{\"statements\":[[0,\"\\n\"],[11,\"h1\",[]],[13],[0,\"LAB 9\"],[14],[0,\"\\n\"],[11,\"h2\",[]],[13],[0,\"Grishin Dmitrii And Norin Evgeniy\"],[14],[0,\"\\n\"],[11,\"h3\",[]],[13],[0,\" 1034 \"],[14],[0,\"\\n\"],[1,[33,[\"login-form\"],null,[[\"onLogin\"],[[33,[\"action\"],[[28,[null]],\"toGraph\"],null]]]],false],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/ind.hbs" } });
 });
 define("lab9/templates/login", ["exports"], function (exports) {
   "use strict";
@@ -599,6 +677,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+a6b7804b"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+8cfcb62a"});
 }
 //# sourceMappingURL=lab9.map

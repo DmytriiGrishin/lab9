@@ -5,6 +5,21 @@ define('lab9/tests/app.lint-test', [], function () {
 
   QUnit.module('ESLint | app');
 
+  QUnit.test('adapters/application.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'adapters/application.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('adapters/point.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'adapters/point.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('adapters/user.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'adapters/user.js should pass ESLint\n\n');
+  });
+
   QUnit.test('app.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'app.js should pass ESLint\n\n');
@@ -28,6 +43,11 @@ define('lab9/tests/app.lint-test', [], function () {
   QUnit.test('controllers/graph.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'controllers/graph.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('controllers/ind.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'controllers/ind.js should pass ESLint\n\n');
   });
 
   QUnit.test('models/point.js', function (assert) {
@@ -294,9 +314,29 @@ define('lab9/tests/tests.lint-test', [], function () {
     assert.ok(true, 'test-helper.js should pass ESLint\n\n');
   });
 
+  QUnit.test('unit/adapters/application-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/adapters/application-test.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('unit/adapters/point-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/adapters/point-test.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('unit/adapters/user-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/adapters/user-test.js should pass ESLint\n\n');
+  });
+
   QUnit.test('unit/controllers/graph-test.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/controllers/graph-test.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('unit/controllers/ind-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/controllers/ind-test.js should pass ESLint\n\n');
   });
 
   QUnit.test('unit/models/point-test.js', function (assert) {
@@ -334,10 +374,66 @@ define('lab9/tests/tests.lint-test', [], function () {
     assert.ok(true, 'unit/routes/nahui-test.js should pass ESLint\n\n');
   });
 });
+define('lab9/tests/unit/adapters/application-test', ['ember-qunit'], function (_emberQunit) {
+  'use strict';
+
+  (0, _emberQunit.moduleFor)('adapter:application', 'Unit | Adapter | application', {
+    // Specify the other units that are required for this test.
+    // needs: ['serializer:foo']
+  });
+
+  // Replace this with your real tests.
+  (0, _emberQunit.test)('it exists', function (assert) {
+    var adapter = this.subject();
+    assert.ok(adapter);
+  });
+});
+define('lab9/tests/unit/adapters/point-test', ['ember-qunit'], function (_emberQunit) {
+  'use strict';
+
+  (0, _emberQunit.moduleFor)('adapter:point', 'Unit | Adapter | point', {
+    // Specify the other units that are required for this test.
+    // needs: ['serializer:foo']
+  });
+
+  // Replace this with your real tests.
+  (0, _emberQunit.test)('it exists', function (assert) {
+    var adapter = this.subject();
+    assert.ok(adapter);
+  });
+});
+define('lab9/tests/unit/adapters/user-test', ['ember-qunit'], function (_emberQunit) {
+  'use strict';
+
+  (0, _emberQunit.moduleFor)('adapter:user', 'Unit | Adapter | user', {
+    // Specify the other units that are required for this test.
+    // needs: ['serializer:foo']
+  });
+
+  // Replace this with your real tests.
+  (0, _emberQunit.test)('it exists', function (assert) {
+    var adapter = this.subject();
+    assert.ok(adapter);
+  });
+});
 define('lab9/tests/unit/controllers/graph-test', ['ember-qunit'], function (_emberQunit) {
   'use strict';
 
   (0, _emberQunit.moduleFor)('controller:graph', 'Unit | Controller | graph', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
+
+  // Replace this with your real tests.
+  (0, _emberQunit.test)('it exists', function (assert) {
+    var controller = this.subject();
+    assert.ok(controller);
+  });
+});
+define('lab9/tests/unit/controllers/ind-test', ['ember-qunit'], function (_emberQunit) {
+  'use strict';
+
+  (0, _emberQunit.moduleFor)('controller:ind', 'Unit | Controller | ind', {
     // Specify the other units that are required for this test.
     // needs: ['controller:foo']
   });

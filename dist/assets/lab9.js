@@ -2,16 +2,34 @@
 
 
 
-define("lab9/adapters/application", ["exports", "ember-data"], function (exports, _emberData) {
-  "use strict";
+define('lab9/adapters/application', ['exports', 'ember-data'], function (exports, _emberData) {
+  'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = _emberData.default.JSONAPIAdapter.extend({
     headers: function () {
-      var jwt = document.cookie.match(new RegExp("(?:^|; )" + "jwt".replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
-      return { "jwt": jwt };
+      function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return null;
+      }
+      var jwt = getCookie("jwt");
+      var headers = {};
+      headers['Content-Type'] = 'application/json';
+      headers['jwt'] = jwt;
+      return headers;
     }.property().volatile()
   });
 });
@@ -53,22 +71,31 @@ define('lab9/app', ['exports', 'ember', 'lab9/resolver', 'ember-load-initializer
 
   exports.default = App;
 });
-define('lab9/components/canvas-graph', ['exports', 'ember'], function (exports, _ember) {
-  'use strict';
+define("lab9/components/canvas-graph", ["exports", "ember"], function (exports, _ember) {
+  "use strict";
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.default = _ember.default.Component.extend({
-    r: "1",
-    didInsertElement: function didInsertElement() {
-      this.triggerAction({
-        action: 'drawCanvas',
-        target: this
-      });
-    },
-
     actions: {
+      drawPoints: function drawPoints() {
+        var context = document.getElementById("graph").getContext("2d");
+        var points = this.get("store").findAll("point");
+        points.forEach(function (point) {
+          var x = point.x * 50 + 200;
+          var y = point.y * 50 + 200;
+          var isInside = point.isIn;
+          context.beginPath();
+          if (isInside) {
+            context.fillStyle = "Green";
+          } else {
+            context.fillStyle = "Black";
+          }
+          context.arc(x, y, 3, 0 * Math.PI, 2 * Math.PI);
+          context.fill();
+        });
+      },
       drawCanvas: function drawCanvas() {
         function drawCoordinates(context, r) {
           var pixel_transform = 50;
@@ -146,7 +173,6 @@ define('lab9/components/canvas-graph', ['exports', 'ember'], function (exports, 
         canvasFill(this.get("r"));
       }
     },
-    store: _ember.default.inject.service(),
     click: function click(event) {
       var x = (event.clientX - 8 - 200) / 50;
       var y = (event.clientY - 8 - 200) / 50;
@@ -157,7 +183,7 @@ define('lab9/components/canvas-graph', ['exports', 'ember'], function (exports, 
       }).save();
 
       this.triggerAction({
-        action: 'drawCanvas',
+        action: 'drawPoints',
         target: this
       });
     }
@@ -196,7 +222,7 @@ define("lab9/components/login-form", ["exports", "ember"], function (exports, _e
         _ember.default.$.ajax({
           type: 'GET',
           url: '/login?username=' + username + '&pass=' + password,
-          success: function success(response) {
+          success: function success(data, status, response) {
             ths.set("isError", false);
             document.cookie = "jwt=" + JSON.parse(response.responseText).jwt;
             ths.get("onLogin")();
@@ -236,9 +262,108 @@ define("lab9/controllers/graph", ["exports", "ember"], function (exports, _ember
     rInp: 1,
     rerrorMesag: "R must be 1 or greater. Set 1 by default",
     points: _ember.default.computed(function () {
-      return this.get('store').peekAll('point');
+      return this.get('store').findAll('point');
     }),
     actions: {
+      drawPoints: function drawPoints() {
+        this.triggerAction({
+          action: 'drawCanvas',
+          target: this
+        });
+        var context = document.getElementById("graph").getContext("2d");
+        var points = this.get("points");
+        points.forEach(function (point) {
+          var x = point.x * 50 + 200;
+          var y = point.y * 50 + 200;
+          var isInside = point.isIn;
+          context.beginPath();
+          if (isInside) {
+            context.fillStyle = "Green";
+          } else {
+            context.fillStyle = "Black";
+          }
+          context.arc(x, y, 3, 0 * Math.PI, 2 * Math.PI);
+          context.fill();
+        });
+      },
+      drawCanvas: function drawCanvas() {
+        function drawCoordinates(context, r) {
+          var pixel_transform = 50;
+          context.beginPath();
+          /*Draw coordianates*/
+          context.moveTo(200, 200);
+          context.lineTo(200, 0);
+          context.lineTo(205, 5);
+          context.moveTo(200, 0);
+          context.lineTo(195, 5);
+          context.moveTo(0, 200);
+          context.lineTo(200, 200);
+          context.lineTo(200, 400);
+          context.moveTo(200, 200);
+          context.lineTo(400, 200);
+          context.lineTo(395, 205);
+          context.moveTo(400, 200);
+          context.lineTo(395, 195);
+          context.moveTo(0, 200);
+          if (r > 0) {
+            var pix = r * pixel_transform;
+            /*Draw measures*/
+            var i = void 0;
+            for (i = 200 + pix; i >= 200 - pix; i -= pix / 2) {
+              context.moveTo(195, i);
+              context.lineTo(205, i);
+              context.moveTo(i, 195);
+              context.lineTo(i, 205);
+            }
+          }
+          context.strokeStyle = "black";
+          context.stroke();
+          /*Draw coordinates text*/
+          context.font = "16px Georgia";
+          context.textBaseline = "top";
+          context.textAlign = "left";
+          context.fillStyle = "black";
+          context.fillText("Y", 210, 0);
+          context.textAlign = "right";
+          context.textBaseline = "bottom";
+          context.fillText("X", 400, 190);
+        }
+
+        function drawFigure(context, r) {
+
+          var pixel_transform = 50;
+          /*Arc fill*/
+          context.beginPath();
+          context.arc(199, 201, r / 2 * pixel_transform, 0.5 * Math.PI, Math.PI);
+          context.moveTo(199 - r / 2 * pixel_transform, 201);
+          context.lineTo(199, 201);
+          context.lineTo(199, 201 + r / 2 * pixel_transform);
+          /*Triangle fill*/
+          context.moveTo(199 - r / 2 * pixel_transform, 199);
+          context.lineTo(199, 199);
+          context.lineTo(199, 199 - r * pixel_transform);
+          context.lineTo(199 - r / 2 * pixel_transform, 199);
+          /*Rectangle fill */
+          context.rect(201, 201, r * pixel_transform, r / 2 * pixel_transform);
+          context.closePath();
+          context.fillStyle = "#5c99ED";
+          context.fill();
+          /*Figure Draw End*/
+        }
+
+        function canvasFill(r) {
+          var canvas = document.getElementById("graph");
+
+          var context = canvas.getContext("2d");
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          if (r > 0) {
+            drawFigure(context, r);
+          }
+          drawCoordinates(context, r);
+        }
+
+        canvasFill(this.get("r"));
+      },
       xchangeListener: function xchangeListener(xInp) {
         this.set('xInp', xInp);
       },
@@ -250,14 +375,18 @@ define("lab9/controllers/graph", ["exports", "ember"], function (exports, _ember
           this.set("rerrorMesag", null);
           this.set('rInp', rInp);
         }
+        this.triggerAction({
+          action: 'drawPoints',
+          target: this
+        });
       },
-      ychangeListener: function ychangeListener(xInp) {
-        this.set('yInp', xInp);
+      ychangeListener: function ychangeListener(yInp) {
+        this.set('yInp', yInp);
       },
       sendPoint: function sendPoint() {
         if (this.get("rInp") > 0) {
           this.set("rerrorMesag", null);
-          if (this.get("yInp").isNumber && this.get("yInp") >= -3 && this.get("yInp") <= 3) {
+          if (!this.get("yInp").isNaN && this.get("yInp") > -3 && this.get("yInp") < 3) {
             this.set('yerrorMesag', null);
             this.get("store").createRecord('point', {
               x: this.get('xInp'),
@@ -270,9 +399,23 @@ define("lab9/controllers/graph", ["exports", "ember"], function (exports, _ember
         } else {
           this.set("rerrorMesag", "R must be 1 or greater");
         }
+      },
+
+      click: function click(event) {
+        var x = (event.clientX - 8 - 200) / 50;
+        var y = (event.clientY - 8 - 200) / 50;
+        this.get("store").createRecord("point", {
+          x: x,
+          y: y,
+          r: this.get("r")
+        }).save();
+
+        this.triggerAction({
+          action: 'drawPoints',
+          target: this
+        });
       }
     }
-
   });
 });
 define('lab9/controllers/ind', ['exports', 'ember'], function (exports, _ember) {
@@ -605,7 +748,7 @@ define("lab9/templates/components/canvas-graph", ["exports"], function (exports)
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "dabs8N98", "block": "{\"statements\":[[11,\"canvas\",[]],[15,\"class\",\"brd\"],[15,\"id\",\"graph\"],[15,\"width\",\"400\"],[15,\"height\",\"400\"],[13],[14],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/components/canvas-graph.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "bMu7moe6", "block": "{\"statements\":[],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/components/canvas-graph.hbs" } });
 });
 define("lab9/templates/components/list-of-points", ["exports"], function (exports) {
   "use strict";
@@ -629,7 +772,7 @@ define("lab9/templates/graph", ["exports"], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "4YvrogTb", "block": "{\"statements\":[[1,[26,[\"outlet\"]],false],[0,\"\\n\"],[11,\"script\",[]],[13],[0,\"\\n  function drawPoint(context, x, y, isInside){\\n    context.beginPath();\\n    if(isInside){\\n      context.fillStyle = \\\"Green\\\";\\n    } else {\\n      context.fillStyle = \\\"Black\\\";\\n    }\\n    context.arc(x, y, 3, 0*Math.PI, 2*Math.PI);\\n    context.fill();\\n  }\\n\"],[14],[0,\"\\n\"],[1,[33,[\"canvas-graph\"],null,[[\"r\"],[[28,[\"rInp\"]]]]],false],[0,\"\\n\"],[11,\"br\",[]],[13],[14],[0,\"\\nX: \"],[11,\"select\",[]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"xchangeListener\"],[[\"value\"],[\"target.value\"]]],null],[13],[0,\"\\n\"],[6,[\"each\"],[[28,[\"xVars\"]]],null,{\"statements\":[[0,\"    \"],[11,\"option\",[]],[16,\"value\",[28,[\"value\"]],null],[13],[1,[28,[\"value\"]],false],[14],[0,\"\\n\"]],\"locals\":[\"value\"]},null],[14],[0,\"\\n\"],[11,\"br\",[]],[13],[14],[0,\"\\nY: \"],[11,\"input\",[]],[15,\"type\",\"text\"],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"ychangeListener\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[11,\"div\",[]],[15,\"color\",\"RED\"],[13],[1,[26,[\"yerrorMesag\"]],false],[14],[0,\"\\nR: \"],[11,\"select\",[]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"rchangeListener\"],[[\"value\"],[\"target.value\"]]],null],[13],[0,\"\\n\"],[6,[\"each\"],[[28,[\"xVars\"]]],null,{\"statements\":[[0,\"    \"],[11,\"option\",[]],[16,\"value\",[28,[\"value\"]],null],[13],[1,[28,[\"value\"]],false],[14],[0,\"\\n\"]],\"locals\":[\"value\"]},null],[14],[11,\"div\",[]],[15,\"color\",\"RED\"],[13],[1,[26,[\"rerrorMesag\"]],false],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"button\"],[16,\"onclick\",[33,[\"action\"],[[28,[null]],\"sendPoint\"],null],null],[15,\"value\",\"Check point\"],[13],[14],[0,\"\\n\"],[11,\"table\",[]],[13],[0,\"\\n\"],[6,[\"if\"],[[28,[\"points\"]]],null,{\"statements\":[[0,\"    \"],[11,\"tr\",[]],[13],[0,\"\\n      \"],[11,\"th\",[]],[13],[0,\"X\"],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[0,\"Y\"],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[0,\"R\"],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[0,\"is Included\"],[14],[0,\"\\n    \"],[14],[0,\"\\n\"],[6,[\"each\"],[[28,[\"points\"]]],null,{\"statements\":[[0,\"      \"],[11,\"tr\",[]],[13],[0,\"\\n      \"],[11,\"th\",[]],[13],[1,[28,[\"point\",\"x\"]],false],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[1,[28,[\"point\",\"y\"]],false],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[1,[28,[\"point\",\"r\"]],false],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[1,[28,[\"point\",\"isIn\"]],false],[14],[0,\"\\n      \"],[14],[0,\"\\n\"]],\"locals\":[\"point\"]},null]],\"locals\":[]},null],[14]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/graph.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "bO4OPXpU", "block": "{\"statements\":[[1,[26,[\"outlet\"]],false],[0,\"\\n\"],[11,\"script\",[]],[13],[0,\"\\n  function drawPoint(context, x, y, isInside){\\n    context.beginPath();\\n    if(isInside){\\n      context.fillStyle = \\\"Green\\\";\\n    } else {\\n      context.fillStyle = \\\"Black\\\";\\n    }\\n    context.arc(x, y, 3, 0*Math.PI, 2*Math.PI);\\n    context.fill();\\n  }\\n\"],[14],[0,\"\\n\"],[11,\"canvas\",[]],[15,\"class\",\"brd\"],[15,\"id\",\"graph\"],[16,\"onClick\",[33,[\"action\"],[[28,[null]],\"click\"],null],null],[15,\"width\",\"400\"],[15,\"height\",\"400\"],[13],[14],[0,\"\\n\"],[11,\"br\",[]],[13],[14],[0,\"\\nX: \"],[11,\"select\",[]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"xchangeListener\"],[[\"value\"],[\"target.value\"]]],null],[13],[0,\"\\n\"],[6,[\"each\"],[[28,[\"xVars\"]]],null,{\"statements\":[[0,\"    \"],[11,\"option\",[]],[16,\"value\",[28,[\"value\"]],null],[13],[1,[28,[\"value\"]],false],[14],[0,\"\\n\"]],\"locals\":[\"value\"]},null],[14],[0,\"\\n\"],[11,\"br\",[]],[13],[14],[0,\"\\nY: \"],[11,\"input\",[]],[15,\"type\",\"text\"],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"ychangeListener\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[11,\"div\",[]],[15,\"color\",\"RED\"],[13],[1,[26,[\"yerrorMesag\"]],false],[14],[0,\"\\nR: \"],[11,\"select\",[]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"rchangeListener\"],[[\"value\"],[\"target.value\"]]],null],[13],[0,\"\\n\"],[6,[\"each\"],[[28,[\"xVars\"]]],null,{\"statements\":[[0,\"    \"],[11,\"option\",[]],[16,\"value\",[28,[\"value\"]],null],[13],[1,[28,[\"value\"]],false],[14],[0,\"\\n\"]],\"locals\":[\"value\"]},null],[14],[11,\"div\",[]],[15,\"color\",\"RED\"],[13],[1,[26,[\"rerrorMesag\"]],false],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"button\"],[16,\"onclick\",[33,[\"action\"],[[28,[null]],\"sendPoint\"],null],null],[15,\"value\",\"Check point\"],[13],[14],[0,\"\\n\"],[11,\"table\",[]],[13],[0,\"\\n\"],[6,[\"if\"],[[28,[\"points\"]]],null,{\"statements\":[[0,\"    \"],[11,\"tr\",[]],[13],[0,\"\\n      \"],[11,\"th\",[]],[13],[0,\"X\"],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[0,\"Y\"],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[0,\"R\"],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[0,\"is Included\"],[14],[0,\"\\n    \"],[14],[0,\"\\n\"],[6,[\"each\"],[[28,[\"points\"]]],null,{\"statements\":[[0,\"      \"],[11,\"tr\",[]],[13],[0,\"\\n      \"],[11,\"th\",[]],[13],[1,[28,[\"point\",\"x\"]],false],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[1,[28,[\"point\",\"y\"]],false],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[1,[28,[\"point\",\"r\"]],false],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[1,[28,[\"point\",\"isIn\"]],false],[14],[0,\"\\n      \"],[14],[0,\"\\n\"]],\"locals\":[\"point\"]},null]],\"locals\":[]},null],[14]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/graph.hbs" } });
 });
 define("lab9/templates/ind", ["exports"], function (exports) {
   "use strict";
@@ -677,6 +820,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+8cfcb62a"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+1a0574fd"});
 }
 //# sourceMappingURL=lab9.map

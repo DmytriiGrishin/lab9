@@ -45,9 +45,14 @@ define('lab9/tests/app.lint-test', [], function () {
     assert.ok(true, 'controllers/graph.js should pass ESLint\n\n');
   });
 
-  QUnit.test('controllers/ind.js', function (assert) {
+  QUnit.test('controllers/index.js', function (assert) {
     assert.expect(1);
-    assert.ok(true, 'controllers/ind.js should pass ESLint\n\n');
+    assert.ok(true, 'controllers/index.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('controllers/reg.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'controllers/reg.js should pass ESLint\n\n');
   });
 
   QUnit.test('models/point.js', function (assert) {
@@ -85,6 +90,16 @@ define('lab9/tests/app.lint-test', [], function () {
     assert.ok(true, 'routes/ind/login.js should pass ESLint\n\n');
   });
 
+  QUnit.test('routes/index.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'routes/index.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('routes/index/test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'routes/index/test.js should pass ESLint\n\n');
+  });
+
   QUnit.test('routes/login.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'routes/login.js should pass ESLint\n\n');
@@ -93,6 +108,11 @@ define('lab9/tests/app.lint-test', [], function () {
   QUnit.test('routes/nahui.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'routes/nahui.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('routes/reg.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'routes/reg.js should pass ESLint\n\n');
   });
 });
 define('lab9/tests/helpers/destroy-app', ['exports', 'ember'], function (exports, _ember) {
@@ -339,6 +359,11 @@ define('lab9/tests/tests.lint-test', [], function () {
     assert.ok(true, 'unit/controllers/ind-test.js should pass ESLint\n\n');
   });
 
+  QUnit.test('unit/controllers/reg-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/controllers/reg-test.js should pass ESLint\n\n');
+  });
+
   QUnit.test('unit/models/point-test.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/models/point-test.js should pass ESLint\n\n');
@@ -364,6 +389,16 @@ define('lab9/tests/tests.lint-test', [], function () {
     assert.ok(true, 'unit/routes/ind/login-test.js should pass ESLint\n\n');
   });
 
+  QUnit.test('unit/routes/index-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/routes/index-test.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('unit/routes/index/test-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/routes/index/test-test.js should pass ESLint\n\n');
+  });
+
   QUnit.test('unit/routes/login-test.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/routes/login-test.js should pass ESLint\n\n');
@@ -372,6 +407,11 @@ define('lab9/tests/tests.lint-test', [], function () {
   QUnit.test('unit/routes/nahui-test.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/routes/nahui-test.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('unit/routes/reg-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/routes/reg-test.js should pass ESLint\n\n');
   });
 });
 define('lab9/tests/unit/adapters/application-test', ['ember-qunit'], function (_emberQunit) {
@@ -434,6 +474,20 @@ define('lab9/tests/unit/controllers/ind-test', ['ember-qunit'], function (_ember
   'use strict';
 
   (0, _emberQunit.moduleFor)('controller:ind', 'Unit | Controller | ind', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
+
+  // Replace this with your real tests.
+  (0, _emberQunit.test)('it exists', function (assert) {
+    var controller = this.subject();
+    assert.ok(controller);
+  });
+});
+define('lab9/tests/unit/controllers/reg-test', ['ember-qunit'], function (_emberQunit) {
+  'use strict';
+
+  (0, _emberQunit.moduleFor)('controller:reg', 'Unit | Controller | reg', {
     // Specify the other units that are required for this test.
     // needs: ['controller:foo']
   });
@@ -511,6 +565,32 @@ define('lab9/tests/unit/routes/ind/login-test', ['ember-qunit'], function (_embe
     assert.ok(route);
   });
 });
+define('lab9/tests/unit/routes/index-test', ['ember-qunit'], function (_emberQunit) {
+  'use strict';
+
+  (0, _emberQunit.moduleFor)('route:index', 'Unit | Route | index', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
+
+  (0, _emberQunit.test)('it exists', function (assert) {
+    var route = this.subject();
+    assert.ok(route);
+  });
+});
+define('lab9/tests/unit/routes/index/test-test', ['ember-qunit'], function (_emberQunit) {
+  'use strict';
+
+  (0, _emberQunit.moduleFor)('route:index/test', 'Unit | Route | index/test', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
+
+  (0, _emberQunit.test)('it exists', function (assert) {
+    var route = this.subject();
+    assert.ok(route);
+  });
+});
 define('lab9/tests/unit/routes/login-test', ['ember-qunit'], function (_emberQunit) {
   'use strict';
 
@@ -528,6 +608,19 @@ define('lab9/tests/unit/routes/nahui-test', ['ember-qunit'], function (_emberQun
   'use strict';
 
   (0, _emberQunit.moduleFor)('route:nahui', 'Unit | Route | nahui', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
+
+  (0, _emberQunit.test)('it exists', function (assert) {
+    var route = this.subject();
+    assert.ok(route);
+  });
+});
+define('lab9/tests/unit/routes/reg-test', ['ember-qunit'], function (_emberQunit) {
+  'use strict';
+
+  (0, _emberQunit.moduleFor)('route:reg', 'Unit | Route | reg', {
     // Specify the other units that are required for this test.
     // needs: ['controller:foo']
   });

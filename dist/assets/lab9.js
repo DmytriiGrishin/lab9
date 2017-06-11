@@ -228,6 +228,9 @@ define("lab9/components/login-form", ["exports", "ember"], function (exports, _e
             ths.set("isError", true);
           }
         });
+      },
+      toReg: function toReg() {
+        this.get('toReg')();
       }
     }
 
@@ -406,7 +409,7 @@ define("lab9/controllers/graph", ["exports", "ember"], function (exports, _ember
     }
   });
 });
-define('lab9/controllers/ind', ['exports', 'ember'], function (exports, _ember) {
+define('lab9/controllers/index', ['exports', 'ember'], function (exports, _ember) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -416,6 +419,63 @@ define('lab9/controllers/ind', ['exports', 'ember'], function (exports, _ember) 
     actions: {
       toGraph: function toGraph() {
         this.transitionToRoute('graph');
+      },
+      toReg: function toReg() {
+        this.transitionToRoute('reg');
+      }
+    }
+  });
+});
+define("lab9/controllers/reg", ["exports", "ember"], function (exports, _ember) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Controller.extend({
+    username: "",
+    password: "",
+    secpassword: "",
+    errorMesag: "",
+    okState: false,
+    actions: {
+      nameChanged: function nameChanged(value) {
+        this.set('username', value);
+      },
+      passChanged: function passChanged(value) {
+        this.set('password', value);
+      },
+      secpassChanged: function secpassChanged(value) {
+        this.set('secpassword', value);
+        if (this.get('password') !== this.get('secpassword')) {
+          this.set('errorMesag', "Password doesn't matchs");
+          this.set('okState', false);
+        } else {
+          this.set('errorMesag', "");
+          this.set('okState', true);
+        }
+      },
+
+      userLogin: function userLogin() {
+        var username = this.get('username');
+        var password = this.get('password');
+        var ths = this;
+        if (this.get('okState') && username !== "") {
+          _ember.default.$.ajax({
+            type: 'POST',
+            url: '/login?username=' + username + '&pass=' + password,
+            success: function success() {
+              ths.set("errorMesag", "");
+              ths.get("toLog")();
+            },
+            error: function error() {
+              ths.set("errorMesag", "User exists!");
+            }
+          });
+        }
+      },
+      toLog: function toLog() {
+        this.transitionToRoute("");
       }
     }
   });
@@ -662,7 +722,7 @@ define('lab9/router', ['exports', 'ember', 'lab9/config/environment'], function 
 
   Router.map(function () {
     this.route('graph');
-    this.route('ind', { path: '/' });
+    this.route('reg');
   });
 
   exports.default = Router;
@@ -693,6 +753,22 @@ define('lab9/routes/ind/login', ['exports', 'ember'], function (exports, _ember)
   });
   exports.default = _ember.default.Route.extend({});
 });
+define('lab9/routes/index', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Route.extend({});
+});
+define('lab9/routes/index/test', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Route.extend({});
+});
 define('lab9/routes/login', ['exports', 'ember'], function (exports, _ember) {
   'use strict';
 
@@ -702,6 +778,14 @@ define('lab9/routes/login', ['exports', 'ember'], function (exports, _ember) {
   exports.default = _ember.default.Route.extend({});
 });
 define('lab9/routes/nahui', ['exports', 'ember'], function (exports, _ember) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _ember.default.Route.extend({});
+});
+define('lab9/routes/reg', ['exports', 'ember'], function (exports, _ember) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -728,7 +812,7 @@ define("lab9/templates/application", ["exports"], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "+ubaltrZ", "block": "{\"statements\":[[1,[26,[\"outlet\"]],false]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/application.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "I7O1sN9u", "block": "{\"statements\":[[11,\"h1\",[]],[13],[0,\"LAB 9\"],[14],[0,\"\\n\"],[11,\"h2\",[]],[13],[0,\"Grishin Dmitrii And Norin Evgeniy\"],[14],[0,\"\\n\"],[11,\"h3\",[]],[13],[0,\" VAR 1034 \"],[14],[0,\"\\n\"],[1,[26,[\"outlet\"]],false]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/application.hbs" } });
 });
 define("lab9/templates/components/canvas-graph", ["exports"], function (exports) {
   "use strict";
@@ -752,7 +836,7 @@ define("lab9/templates/components/login-form", ["exports"], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "kiy2GHDW", "block": "{\"statements\":[[11,\"input\",[]],[15,\"type\",\"text\"],[16,\"value\",[34,[[26,[\"urername\"]]]]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"nameChanged\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"text\"],[16,\"value\",[34,[[26,[\"password\"]]]]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"passChanged\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[11,\"br\",[]],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"button\"],[15,\"value\",\"Log in\"],[5,[\"action\"],[[28,[null]],\"userLogin\"]],[13],[14],[0,\"\\n\"],[6,[\"if\"],[[28,[\"isError\"]]],null,{\"statements\":[[0,\"  \"],[11,\"div\",[]],[13],[0,\"Can't log in!\"],[14],[0,\"\\n\"]],\"locals\":[]},null],[1,[26,[\"outlet\"]],false],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/components/login-form.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "wj/4JNam", "block": "{\"statements\":[[11,\"input\",[]],[15,\"type\",\"text\"],[16,\"value\",[34,[[26,[\"urername\"]]]]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"nameChanged\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"password\"],[16,\"value\",[34,[[26,[\"password\"]]]]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"passChanged\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[11,\"br\",[]],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"button\"],[15,\"value\",\"Log in\"],[5,[\"action\"],[[28,[null]],\"userLogin\"]],[13],[14],[0,\" \"],[11,\"input\",[]],[15,\"type\",\"button\"],[15,\"value\",\"Registration\"],[5,[\"action\"],[[28,[null]],\"toReg\"]],[13],[14],[0,\"\\n\"],[6,[\"if\"],[[28,[\"isError\"]]],null,{\"statements\":[[0,\"  \"],[11,\"div\",[]],[13],[0,\"Can't log in!\"],[14],[0,\"\\n\"]],\"locals\":[]},null],[1,[26,[\"outlet\"]],false],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/components/login-form.hbs" } });
 });
 define("lab9/templates/graph", ["exports"], function (exports) {
   "use strict";
@@ -768,7 +852,23 @@ define("lab9/templates/ind", ["exports"], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "lkjdnkbG", "block": "{\"statements\":[[0,\"\\n\"],[11,\"h1\",[]],[13],[0,\"LAB 9\"],[14],[0,\"\\n\"],[11,\"h2\",[]],[13],[0,\"Grishin Dmitrii And Norin Evgeniy\"],[14],[0,\"\\n\"],[11,\"h3\",[]],[13],[0,\" 1034 \"],[14],[0,\"\\n\"],[1,[33,[\"login-form\"],null,[[\"onLogin\"],[[33,[\"action\"],[[28,[null]],\"toGraph\"],null]]]],false],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/ind.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "nVEXdDb0", "block": "{\"statements\":[[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/ind.hbs" } });
+});
+define("lab9/templates/index", ["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = Ember.HTMLBars.template({ "id": "swG1gdJF", "block": "{\"statements\":[[1,[33,[\"login-form\"],null,[[\"onLogin\",\"toReg\"],[[33,[\"action\"],[[28,[null]],\"toGraph\"],null],[33,[\"action\"],[[28,[null]],\"toReg\"],null]]]],false],[0,\"\\n\"],[1,[26,[\"outlet\"]],false],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/index.hbs" } });
+});
+define("lab9/templates/index/test", ["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = Ember.HTMLBars.template({ "id": "UkCgXcQf", "block": "{\"statements\":[[1,[26,[\"outlet\"]],false],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/index/test.hbs" } });
 });
 define("lab9/templates/login", ["exports"], function (exports) {
   "use strict";
@@ -778,13 +878,13 @@ define("lab9/templates/login", ["exports"], function (exports) {
   });
   exports.default = Ember.HTMLBars.template({ "id": "pHv08CkJ", "block": "{\"statements\":[[0,\"LOGIN:\\n\"],[1,[26,[\"login-form\"]],false]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/login.hbs" } });
 });
-define("lab9/templates/nahui", ["exports"], function (exports) {
+define("lab9/templates/reg", ["exports"], function (exports) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "0rGSj5Lu", "block": "{\"statements\":[[1,[26,[\"outlet\"]],false],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/nahui.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "ngVb0ZXq", "block": "{\"statements\":[[11,\"div\",[]],[13],[0,\"Registration\"],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"text\"],[16,\"value\",[34,[[26,[\"urername\"]]]]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"nameChanged\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"password\"],[16,\"value\",[34,[[26,[\"password\"]]]]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"passChanged\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"password\"],[16,\"value\",[34,[[26,[\"secpassword\"]]]]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"secpassChanged\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[11,\"br\",[]],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"button\"],[15,\"value\",\"Register\"],[5,[\"action\"],[[28,[null]],\"userLogin\"]],[13],[14],[0,\" \"],[11,\"input\",[]],[15,\"type\",\"button\"],[15,\"value\",\"Back\"],[5,[\"action\"],[[28,[null]],\"toLog\"]],[13],[14],[0,\"\\n\"],[11,\"div\",[]],[15,\"color\",\"RED\"],[13],[1,[26,[\"errorMesag\"]],false],[14],[0,\"\\n\"],[1,[26,[\"outlet\"]],false],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/reg.hbs" } });
 });
 
 
@@ -808,6 +908,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+bbb25d86"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+5bc428e4"});
 }
 //# sourceMappingURL=lab9.map

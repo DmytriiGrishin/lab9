@@ -348,7 +348,7 @@ define("lab9/controllers/reg", ["exports", "ember"], function (exports, _ember) 
         if (this.get('okState') && username !== "") {
           _ember.default.$.ajax({
             type: 'POST',
-            url: '/login?username=' + username + '&pass=' + password,
+            url: '/register?username=' + username + '&pass=' + password,
             success: function success(data, status, response) {
               ths.set("errorMesag", "");
               document.cookie = "jwt=" + JSON.parse(response.responseText).jwt;
@@ -722,7 +722,7 @@ define("lab9/templates/components/login-form", ["exports"], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "wj/4JNam", "block": "{\"statements\":[[11,\"input\",[]],[15,\"type\",\"text\"],[16,\"value\",[34,[[26,[\"urername\"]]]]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"nameChanged\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"password\"],[16,\"value\",[34,[[26,[\"password\"]]]]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"passChanged\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[11,\"br\",[]],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"button\"],[15,\"value\",\"Log in\"],[5,[\"action\"],[[28,[null]],\"userLogin\"]],[13],[14],[0,\" \"],[11,\"input\",[]],[15,\"type\",\"button\"],[15,\"value\",\"Registration\"],[5,[\"action\"],[[28,[null]],\"toReg\"]],[13],[14],[0,\"\\n\"],[6,[\"if\"],[[28,[\"isError\"]]],null,{\"statements\":[[0,\"  \"],[11,\"div\",[]],[13],[0,\"Can't log in!\"],[14],[0,\"\\n\"]],\"locals\":[]},null],[1,[26,[\"outlet\"]],false],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/components/login-form.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "IvkcBMRl", "block": "{\"statements\":[[11,\"input\",[]],[15,\"type\",\"text\"],[15,\"placeholder\",\"User name\"],[16,\"value\",[34,[[26,[\"urername\"]]]]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"nameChanged\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"password\"],[15,\"placeholder\",\"Password\"],[16,\"value\",[34,[[26,[\"password\"]]]]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"passChanged\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[11,\"br\",[]],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"button\"],[15,\"value\",\"Log in\"],[5,[\"action\"],[[28,[null]],\"userLogin\"]],[13],[14],[0,\" \"],[11,\"input\",[]],[15,\"type\",\"button\"],[15,\"value\",\"Registration\"],[5,[\"action\"],[[28,[null]],\"toReg\"]],[13],[14],[0,\"\\n\"],[6,[\"if\"],[[28,[\"isError\"]]],null,{\"statements\":[[0,\"  \"],[11,\"div\",[]],[13],[0,\"Can't log in!\"],[14],[0,\"\\n\"]],\"locals\":[]},null],[1,[26,[\"outlet\"]],false],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/components/login-form.hbs" } });
 });
 define("lab9/templates/graph", ["exports"], function (exports) {
   "use strict";
@@ -770,7 +770,7 @@ define("lab9/templates/reg", ["exports"], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "ngVb0ZXq", "block": "{\"statements\":[[11,\"div\",[]],[13],[0,\"Registration\"],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"text\"],[16,\"value\",[34,[[26,[\"urername\"]]]]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"nameChanged\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"password\"],[16,\"value\",[34,[[26,[\"password\"]]]]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"passChanged\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"password\"],[16,\"value\",[34,[[26,[\"secpassword\"]]]]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"secpassChanged\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[11,\"br\",[]],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"button\"],[15,\"value\",\"Register\"],[5,[\"action\"],[[28,[null]],\"userLogin\"]],[13],[14],[0,\" \"],[11,\"input\",[]],[15,\"type\",\"button\"],[15,\"value\",\"Back\"],[5,[\"action\"],[[28,[null]],\"toLog\"]],[13],[14],[0,\"\\n\"],[11,\"div\",[]],[15,\"color\",\"RED\"],[13],[1,[26,[\"errorMesag\"]],false],[14],[0,\"\\n\"],[1,[26,[\"outlet\"]],false],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/reg.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "jHPr8AM7", "block": "{\"statements\":[[11,\"div\",[]],[13],[0,\"Registration\"],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"text\"],[15,\"placeholder\",\"User name\"],[16,\"value\",[34,[[26,[\"urername\"]]]]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"nameChanged\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"password\"],[15,\"placeholder\",\"Password\"],[16,\"value\",[34,[[26,[\"password\"]]]]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"passChanged\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"password\"],[15,\"placeholder\",\"Confirm password\"],[16,\"value\",[34,[[26,[\"secpassword\"]]]]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"secpassChanged\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[11,\"br\",[]],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"button\"],[15,\"value\",\"Register\"],[5,[\"action\"],[[28,[null]],\"userLogin\"]],[13],[14],[0,\" \"],[11,\"input\",[]],[15,\"type\",\"button\"],[15,\"value\",\"Back\"],[5,[\"action\"],[[28,[null]],\"toLog\"]],[13],[14],[0,\"\\n\"],[11,\"div\",[]],[15,\"color\",\"RED\"],[13],[1,[26,[\"errorMesag\"]],false],[14],[0,\"\\n\"],[1,[26,[\"outlet\"]],false],[0,\"\\n\"]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/reg.hbs" } });
 });
 
 
@@ -794,6 +794,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+8acc504f"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+fa2645bc"});
 }
 //# sourceMappingURL=lab9.map

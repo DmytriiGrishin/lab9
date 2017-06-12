@@ -25,11 +25,6 @@ define('lab9/tests/app.lint-test', [], function () {
     assert.ok(true, 'app.js should pass ESLint\n\n');
   });
 
-  QUnit.test('components/canvas-graph.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/canvas-graph.js should pass ESLint\n\n');
-  });
-
   QUnit.test('components/list-of-points.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'components/list-of-points.js should pass ESLint\n\n');

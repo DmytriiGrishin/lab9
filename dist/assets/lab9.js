@@ -288,7 +288,7 @@ define("lab9/controllers/graph", ["exports", "ember"], function (exports, _ember
           x: x,
           y: y,
           r: this.get("rInp"),
-          id: "point" + this.get('xInp') * 10000 + this.get('yInp') * 100000000 + this.get('rInp')
+          id: "point" + x * 10000 + y * 100000000 + this.get('rInp')
         }).save();
         this.get('drawPoints')(this);
       }
@@ -798,6 +798,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+f9181500"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+ff5ba1e7"});
 }
 //# sourceMappingURL=lab9.map

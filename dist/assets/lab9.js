@@ -273,6 +273,8 @@ define("lab9/controllers/graph", ["exports", "ember"], function (exports, _ember
               r: this.get('rInp'),
               id: "point" + this.get('xInp') * 10000 + this.get('yInp') * 100000000 + this.get('rInp')
             }).save();
+            this.get('points').reload();
+            this.get('drawPoints')(this);
           } else {
             this.set('yerrorMesag', "Y must be in (-3..3) range");
           }
@@ -290,6 +292,7 @@ define("lab9/controllers/graph", ["exports", "ember"], function (exports, _ember
           r: this.get("rInp"),
           id: "point" + x * 10000 + y * 100000000 + this.get('rInp')
         }).save();
+        this.get('points').reload();
         this.get('drawPoints')(this);
       }
     }
@@ -798,6 +801,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+ff5ba1e7"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+1942d619"});
 }
 //# sourceMappingURL=lab9.map

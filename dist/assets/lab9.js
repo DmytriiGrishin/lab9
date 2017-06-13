@@ -276,7 +276,14 @@ define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember
             xhr.setRequestHeader('jwt', jwt);
           },
           success: function success() {
-            ths.set('rerrorMesag', ths.get("rerrorMesag"));
+            ths.get('store').findAll('point').then(function (record) {
+              record.content.forEach(function (rec) {
+                _ember.default.run.once(this, function () {
+                  rec.deleteRecord();
+                  rec.save();
+                });
+              }, this);
+            });
           },
           error: function error() {
             ths.set('rerrorMesag', "Can't update");
@@ -314,7 +321,7 @@ define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember
         }
         var jwt = getCookie("jwt");
         _ember.default.$.ajax({
-          type: "UPDATE",
+          type: "PATCH",
           beforeSend: function beforeSend(xhr) {
             xhr.setRequestHeader('jwt', jwt);
           },
@@ -868,6 +875,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+9e7fb9e2"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+937de9d5"});
 }
 //# sourceMappingURL=lab9.map

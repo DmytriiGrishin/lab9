@@ -29,6 +29,7 @@ define('lab9/adapters/application', ['exports', 'ember-data'], function (exports
       var headers = {};
       headers['Content-Type'] = 'application/json';
       headers['jwt'] = jwt;
+      headers['accept'] = 'application/json';
       return headers;
     }.property().volatile()
   });
@@ -875,6 +876,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+937de9d5"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+dc3e0b77"});
 }
 //# sourceMappingURL=lab9.map

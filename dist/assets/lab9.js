@@ -159,10 +159,10 @@ define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember
     drawPoints: function drawPoints(ths) {
       ths.get('drawCanvas')(ths);
       var context = document.getElementById("graph").getContext("2d");
-      var points = ths.get("store").findAll('point');
+      var points = ths.get("store").peekAll('point');
       points.forEach(function (point) {
         var x = point.get("x") * 50 + 200;
-        var y = point.get("y") * 50 + 200;
+        var y = -point.get("y") * 50 + 200;
         var isInside = point.isIn;
         context.beginPath();
         if (isInside) {
@@ -364,7 +364,7 @@ define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember
         this.get('drawPoints')(this);
       },
       ychangeListener: function ychangeListener(yInp) {
-        this.set('yInp', -yInp);
+        this.set('yInp', yInp);
       },
       sendPoint: function sendPoint() {
         if (this.get("rInp") > 0) {
@@ -388,7 +388,7 @@ define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember
 
       click: function click(evt) {
         var x = (evt.pageX - _ember.default.$('#graph').offset().left - 200) / 50;
-        var y = (evt.pageY - _ember.default.$('#graph').offset().top - 200) / 50;
+        var y = -(evt.pageY - _ember.default.$('#graph').offset().top - 200) / 50;
         this.get("store").createRecord("point", {
           x: x,
           y: y,
@@ -903,6 +903,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+c652d0f6"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+0df75784"});
 }
 //# sourceMappingURL=lab9.map

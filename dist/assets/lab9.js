@@ -253,6 +253,40 @@ define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember
       canvasFill(ths.get("rInp"));
     },
     actions: {
+      logOut: function logOut() {
+        var ths = this;
+        function getCookie(cname) {
+          var name = cname + "=";
+          var decodedCookie = decodeURIComponent(document.cookie);
+          var ca = decodedCookie.split(';');
+          for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+              c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+              return c.substring(name.length, c.length);
+            }
+          }
+          return null;
+        }
+        var jwt = getCookie("jwt");
+        _ember.default.$.ajax({
+          type: "DELETE",
+          beforeSend: function beforeSend(xhr) {
+            xhr.setRequestHeader('jwt', jwt);
+          },
+          success: function success() {
+            document.cookie = "jwt=;";
+            ths.transitionToRoute("/");
+          },
+
+          error: function error() {
+            ths.set('rerrorMesag', "Can't logout");
+          },
+          url: "/login"
+        });
+      },
       deletePoint: function deletePoint() {
         var ths = this;
         function getCookie(cname) {
@@ -287,7 +321,7 @@ define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember
             });
           },
           error: function error() {
-            ths.set('rerrorMesag', "Can't update");
+            ths.set('rerrorMesag', "Can't delete");
           },
           url: "/points"
         });
@@ -330,7 +364,7 @@ define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember
             ths.set('rerrorMesag', ths.get("rerrorMesag"));
           },
           error: function error() {
-            ths.set('rerrorMesag', "Can't delete");
+            ths.set('rerrorMesag', "Can't update");
           },
           url: "/points?r=" + rInp
         });
@@ -812,7 +846,7 @@ define("lab9/templates/graph", ["exports"], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "vmGEAPF2", "block": "{\"statements\":[[1,[26,[\"outlet\"]],false],[0,\"\\n\"],[11,\"canvas\",[]],[15,\"class\",\"brd\"],[15,\"id\",\"graph\"],[16,\"onClick\",[33,[\"action\"],[[28,[null]],\"click\"],null],null],[15,\"width\",\"400\"],[15,\"height\",\"400\"],[13],[14],[0,\"\\n\"],[11,\"br\",[]],[13],[14],[0,\"\\nX: \"],[11,\"select\",[]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"xchangeListener\"],[[\"value\"],[\"target.value\"]]],null],[13],[0,\"\\n\"],[6,[\"each\"],[[28,[\"xVars\"]]],null,{\"statements\":[[0,\"    \"],[11,\"option\",[]],[16,\"value\",[28,[\"value\"]],null],[13],[1,[28,[\"value\"]],false],[14],[0,\"\\n\"]],\"locals\":[\"value\"]},null],[14],[0,\"\\n\"],[11,\"br\",[]],[13],[14],[0,\"\\nY: \"],[11,\"input\",[]],[15,\"type\",\"text\"],[15,\"placeholder\",\"-3..3\"],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"ychangeListener\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[11,\"div\",[]],[15,\"color\",\"RED\"],[13],[1,[26,[\"yerrorMesag\"]],false],[14],[0,\"\\nR: \"],[11,\"select\",[]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"rchangeListener\"],[[\"value\"],[\"target.value\"]]],null],[13],[0,\"\\n\"],[6,[\"each\"],[[28,[\"xVars\"]]],null,{\"statements\":[[0,\"    \"],[11,\"option\",[]],[16,\"value\",[28,[\"value\"]],null],[13],[1,[28,[\"value\"]],false],[14],[0,\"\\n\"]],\"locals\":[\"value\"]},null],[14],[11,\"div\",[]],[15,\"color\",\"RED\"],[13],[1,[26,[\"rerrorMesag\"]],false],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"button\"],[16,\"onclick\",[33,[\"action\"],[[28,[null]],\"sendPoint\"],null],null],[15,\"value\",\"Check point\"],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"button\"],[16,\"onclick\",[33,[\"action\"],[[28,[null]],\"deletePoint\"],null],null],[15,\"value\",\"Delete all points\"],[13],[14],[0,\"\\n\"],[11,\"table\",[]],[13],[0,\"\\n\"],[6,[\"if\"],[[28,[\"points\"]]],null,{\"statements\":[[0,\"    \"],[11,\"tr\",[]],[13],[0,\"\\n      \"],[11,\"th\",[]],[13],[0,\"X\"],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[0,\"Y\"],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[0,\"R\"],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[0,\"is Included\"],[14],[0,\"\\n    \"],[14],[0,\"\\n\"],[6,[\"each\"],[[28,[\"points\"]]],null,{\"statements\":[[0,\"      \"],[11,\"tr\",[]],[13],[0,\"\\n      \"],[11,\"th\",[]],[13],[1,[28,[\"point\",\"x\"]],false],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[1,[28,[\"point\",\"y\"]],false],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[1,[28,[\"point\",\"r\"]],false],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[1,[28,[\"point\",\"isIn\"]],false],[14],[0,\"\\n      \"],[14],[0,\"\\n\"]],\"locals\":[\"point\"]},null]],\"locals\":[]},null],[14]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/graph.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "vf3nJ5dd", "block": "{\"statements\":[[1,[26,[\"outlet\"]],false],[0,\"\\n\"],[11,\"canvas\",[]],[15,\"class\",\"brd\"],[15,\"id\",\"graph\"],[16,\"onClick\",[33,[\"action\"],[[28,[null]],\"click\"],null],null],[15,\"width\",\"400\"],[15,\"height\",\"400\"],[13],[14],[0,\"\\n\"],[11,\"br\",[]],[13],[14],[0,\"\\nX: \"],[11,\"select\",[]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"xchangeListener\"],[[\"value\"],[\"target.value\"]]],null],[13],[0,\"\\n\"],[6,[\"each\"],[[28,[\"xVars\"]]],null,{\"statements\":[[0,\"    \"],[11,\"option\",[]],[16,\"value\",[28,[\"value\"]],null],[13],[1,[28,[\"value\"]],false],[14],[0,\"\\n\"]],\"locals\":[\"value\"]},null],[14],[0,\"\\n\"],[11,\"br\",[]],[13],[14],[0,\"\\nY: \"],[11,\"input\",[]],[15,\"type\",\"text\"],[15,\"placeholder\",\"-3..3\"],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"ychangeListener\"],[[\"value\"],[\"target.value\"]]],null],[13],[14],[11,\"div\",[]],[15,\"color\",\"RED\"],[13],[1,[26,[\"yerrorMesag\"]],false],[14],[0,\"\\nR: \"],[11,\"select\",[]],[16,\"onchange\",[33,[\"action\"],[[28,[null]],\"rchangeListener\"],[[\"value\"],[\"target.value\"]]],null],[13],[0,\"\\n\"],[6,[\"each\"],[[28,[\"xVars\"]]],null,{\"statements\":[[0,\"    \"],[11,\"option\",[]],[16,\"value\",[28,[\"value\"]],null],[13],[1,[28,[\"value\"]],false],[14],[0,\"\\n\"]],\"locals\":[\"value\"]},null],[14],[11,\"div\",[]],[15,\"color\",\"RED\"],[13],[1,[26,[\"rerrorMesag\"]],false],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"button\"],[16,\"onclick\",[33,[\"action\"],[[28,[null]],\"sendPoint\"],null],null],[15,\"value\",\"Check point\"],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"button\"],[16,\"onclick\",[33,[\"action\"],[[28,[null]],\"deletePoint\"],null],null],[15,\"value\",\"Delete all points\"],[13],[14],[0,\"\\n\"],[11,\"input\",[]],[15,\"type\",\"button\"],[16,\"onclick\",[33,[\"action\"],[[28,[null]],\"logOut\"],null],null],[15,\"value\",\"Logout\"],[13],[14],[0,\"\\n\"],[11,\"table\",[]],[13],[0,\"\\n\"],[6,[\"if\"],[[28,[\"points\"]]],null,{\"statements\":[[0,\"    \"],[11,\"tr\",[]],[13],[0,\"\\n      \"],[11,\"th\",[]],[13],[0,\"X\"],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[0,\"Y\"],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[0,\"R\"],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[0,\"is Included\"],[14],[0,\"\\n    \"],[14],[0,\"\\n\"],[6,[\"each\"],[[28,[\"points\"]]],null,{\"statements\":[[0,\"      \"],[11,\"tr\",[]],[13],[0,\"\\n      \"],[11,\"th\",[]],[13],[1,[28,[\"point\",\"x\"]],false],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[1,[28,[\"point\",\"y\"]],false],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[1,[28,[\"point\",\"r\"]],false],[14],[0,\"\\n      \"],[11,\"th\",[]],[13],[1,[28,[\"point\",\"isIn\"]],false],[14],[0,\"\\n      \"],[14],[0,\"\\n\"]],\"locals\":[\"point\"]},null]],\"locals\":[]},null],[14]],\"locals\":[],\"named\":[],\"yields\":[],\"hasPartials\":false}", "meta": { "moduleName": "lab9/templates/graph.hbs" } });
 });
 define("lab9/templates/ind", ["exports"], function (exports) {
   "use strict";
@@ -876,6 +910,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+dc3e0b77"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+b673b633"});
 }
 //# sourceMappingURL=lab9.map

@@ -311,14 +311,7 @@ define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember
             xhr.setRequestHeader('jwt', jwt);
           },
           success: function success() {
-            ths.get('store').findAll('point').then(function (record) {
-              record.content.forEach(function (rec) {
-                _ember.default.run.once(this, function () {
-                  rec.deleteRecord();
-                  rec.save();
-                });
-              }, this);
-            });
+            ths.get('store').unloadAll("point");
           },
           error: function error() {
             ths.set('rerrorMesag', "Can't delete");
@@ -910,6 +903,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+b673b633"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+06971080"});
 }
 //# sourceMappingURL=lab9.map

@@ -158,9 +158,8 @@ define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember
     }),
     drawPoints: function drawPoints(ths) {
       ths.get('drawCanvas')(ths);
-
       var context = document.getElementById("graph").getContext("2d");
-      var points = ths.get("store").findAll('point', { backgroundReload: true });
+      var points = ths.get("points");
       points.forEach(function (point) {
         var x = point.get("x") * 50 + 200;
         var y = -point.get("y") * 50 + 200;
@@ -904,6 +903,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+d2f2d618"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+dda19fd7"});
 }
 //# sourceMappingURL=lab9.map

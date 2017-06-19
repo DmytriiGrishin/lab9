@@ -165,7 +165,7 @@ define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember
         var y = -point.get("y") * 50 + 200;
         var isInside = point.isIn;
         context.beginPath();
-        if (isInside === "true") {
+        if (isInside == "true") {
           context.fillStyle = "Green";
         } else {
           context.fillStyle = "Black";
@@ -312,13 +312,13 @@ define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember
           },
           success: function success() {
             ths.get('store').unloadAll("point");
+            ths.get('drawPoints')(ths);
           },
           error: function error() {
             ths.set('rerrorMesag', "Can't delete");
           },
           url: "/points"
         });
-        this.get('drawPoints')(this);
       },
       xchangeListener: function xchangeListener(xInp) {
         this.set('xInp', xInp);
@@ -903,6 +903,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+ae18eab8"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+fd64c988"});
 }
 //# sourceMappingURL=lab9.map

@@ -355,19 +355,21 @@ define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember
           },
           success: function success() {
             ths.set('rerrorMesag', ths.get("rerrorMesag"));
+            ths.get("store").unloadAll("point");
+            ths.get("drawPoints")(ths);
           },
           error: function error() {
             ths.set('rerrorMesag', "Can't update");
           },
           url: "/points?r=" + rInp
         });
-        this.get('drawPoints')(this);
       },
       ychangeListener: function ychangeListener(yInp) {
         this.set('yInp', yInp);
       },
       sendPoint: function sendPoint() {
         if (this.get("rInp") > 0) {
+          var self = this;
           this.set("rerrorMesag", null);
           if (!this.get("yInp").isNaN && this.get("yInp") > -3 && this.get("yInp") < 3) {
             this.set('yerrorMesag', null);
@@ -376,8 +378,9 @@ define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember
               y: this.get('yInp'),
               r: this.get('rInp'),
               id: "point" + this.get('xInp') * 10000 + this.get('yInp') * 100000000 + this.get('rInp')
-            }).save();
-            this.get('drawPoints')(this);
+            }).save().then(function () {
+              self.get('drawPoints')(self);
+            });
           } else {
             this.set('yerrorMesag', "Y must be in (-3..3) range");
           }
@@ -389,13 +392,15 @@ define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember
       click: function click(evt) {
         var x = (evt.pageX - _ember.default.$('#graph').offset().left - 200) / 50;
         var y = -(evt.pageY - _ember.default.$('#graph').offset().top - 200) / 50;
+        var self = this;
         this.get("store").createRecord("point", {
           x: x,
           y: y,
           r: this.get("rInp"),
           id: "point" + x * 10000 + y * 100000000 + this.get('rInp')
-        }).save();
-        this.get('drawPoints')(this);
+        }).save().then(function () {
+          self.get('drawPoints')(self);
+        });
       }
     }
   });
@@ -903,6 +908,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+8523190e"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+cf276fca"});
 }
 //# sourceMappingURL=lab9.map

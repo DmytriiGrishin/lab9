@@ -163,12 +163,12 @@ define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember
       points.forEach(function (point) {
         var x = point.get("x") * 50 + 200;
         var y = -point.get("y") * 50 + 200;
-        var isInside = point.isIn;
+        var isInside = point.get("isIn");
         context.beginPath();
-        if (isInside == "true") {
+        if (isInside === true) {
           context.fillStyle = "Green";
         } else {
-          context.fillStyle = "Black";
+          context.fillStyle = "Red";
         }
         context.arc(x, y, 3, 0 * Math.PI, 2 * Math.PI);
         context.fill();
@@ -903,6 +903,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+fd64c988"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+2b0949c5"});
 }
 //# sourceMappingURL=lab9.map

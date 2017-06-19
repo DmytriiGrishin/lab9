@@ -355,8 +355,10 @@ define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember
           },
           success: function success() {
             ths.set('rerrorMesag', ths.get("rerrorMesag"));
-            ths.get("store").unloadAll("point");
-            ths.get("drawPoints")(ths);
+            var points = ths.get("store").findAll("point");
+            points.forEach(function (point) {
+              point.set("r", rInp);
+            });
           },
           error: function error() {
             ths.set('rerrorMesag', "Can't update");
@@ -908,6 +910,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+cf276fca"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+8a88f2c3"});
 }
 //# sourceMappingURL=lab9.map

@@ -154,12 +154,13 @@ define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember
     rInp: 1,
     rerrorMesag: "R must be 1 or greater. Set 1 by default",
     points: _ember.default.computed(function () {
-      return this.get('store').findAll('point');
+      return this.get('store').findAll('point', { backgroundReload: true });
     }),
     drawPoints: function drawPoints(ths) {
       ths.get('drawCanvas')(ths);
+
       var context = document.getElementById("graph").getContext("2d");
-      var points = ths.get("store").peekAll('point');
+      var points = ths.get("store").findAll('point', { backgroundReload: true });
       points.forEach(function (point) {
         var x = point.get("x") * 50 + 200;
         var y = -point.get("y") * 50 + 200;
@@ -903,6 +904,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+2b0949c5"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+d2f2d618"});
 }
 //# sourceMappingURL=lab9.map

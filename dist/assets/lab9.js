@@ -355,13 +355,13 @@ define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember
           },
           success: function success() {
             ths.set('rerrorMesag', ths.get("rerrorMesag"));
-            ths.get('drawPoints')(ths);
           },
           error: function error() {
             ths.set('rerrorMesag', "Can't update");
           },
           url: "/points?r=" + rInp
         });
+        this.get('drawPoints')(this);
       },
       ychangeListener: function ychangeListener(yInp) {
         this.set('yInp', yInp);
@@ -376,9 +376,8 @@ define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember
               y: this.get('yInp'),
               r: this.get('rInp'),
               id: "point" + this.get('xInp') * 10000 + this.get('yInp') * 100000000 + this.get('rInp')
-            }).save().then(function () {
-              this.get('drawPoints')(this);
-            });
+            }).save();
+            this.get('drawPoints')(this);
           } else {
             this.set('yerrorMesag', "Y must be in (-3..3) range");
           }
@@ -395,9 +394,8 @@ define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember
           y: y,
           r: this.get("rInp"),
           id: "point" + x * 10000 + y * 100000000 + this.get('rInp')
-        }).save().then(function () {
-          this.get('drawPoints')(this);
-        });
+        }).save();
+        this.get('drawPoints')(this);
       }
     }
   });
@@ -905,6 +903,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+8d347ae8"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+3527b819"});
 }
 //# sourceMappingURL=lab9.map

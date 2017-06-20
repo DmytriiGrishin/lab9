@@ -159,7 +159,7 @@ define("lab9/controllers/graph", ["exports", "ember"], function (exports, _ember
     points: _ember.default.computed(function () {
       return this.get('store').findAll('point', { backgroundReload: true });
     }),
-    drawPoints: function drawPoints(ths) {
+    drawPoints: function (ths) {
       ths.get('drawCanvas')(ths);
       var context = document.getElementById("graph").getContext("2d");
       var points = ths.get("points");
@@ -176,7 +176,7 @@ define("lab9/controllers/graph", ["exports", "ember"], function (exports, _ember
         context.arc(x, y, 3, 0 * Math.PI, 2 * Math.PI);
         context.fill();
       });
-    },
+    }.observes("points"),
     drawCanvas: function drawCanvas(ths) {
       function drawCoordinates(context, r) {
         var pixel_transform = 50;
@@ -351,14 +351,6 @@ define("lab9/controllers/graph", ["exports", "ember"], function (exports, _ember
           return null;
         }
         var jwt = getCookie("jwt");
-        function sleep(milliseconds) {
-          var start = new Date().getTime();
-          for (var i = 0; i < 1e7; i++) {
-            if (new Date().getTime() - start > milliseconds) {
-              break;
-            }
-          }
-        }
         _ember.default.$.ajax({
           type: "PATCH",
           beforeSend: function beforeSend(xhr) {
@@ -370,10 +362,7 @@ define("lab9/controllers/graph", ["exports", "ember"], function (exports, _ember
             points.forEach(function (point) {
               point.set("r", ths.get("rInp"));
               point.save();
-            }).then(function () {
-              ths.get("drawPoints")(ths);
             });
-            sleep(100);
             ths.get("drawPoints")(ths);
           },
           error: function error() {
@@ -926,6 +915,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+78759e98"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+fc50db4b"});
 }
 //# sourceMappingURL=lab9.map

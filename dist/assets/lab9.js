@@ -351,6 +351,10 @@ define("lab9/controllers/graph", ["exports", "ember"], function (exports, _ember
           return null;
         }
         var jwt = getCookie("jwt");
+        function sleep(ms) {
+          ms += new Date().getTime();
+          while (new Date() < ms) {}
+        }
         _ember.default.$.ajax({
           type: "PATCH",
           beforeSend: function beforeSend(xhr) {
@@ -365,6 +369,8 @@ define("lab9/controllers/graph", ["exports", "ember"], function (exports, _ember
             }).then(function () {
               ths.get("drawPoints")(ths);
             });
+            sleep(100);
+            ths.get("drawPoints")(ths);
           },
           error: function error() {
             ths.set('rerrorMesag', "Can't update");
@@ -916,6 +922,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+549a5bfa"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+2710cf94"});
 }
 //# sourceMappingURL=lab9.map

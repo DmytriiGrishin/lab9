@@ -351,9 +351,13 @@ define("lab9/controllers/graph", ["exports", "ember"], function (exports, _ember
           return null;
         }
         var jwt = getCookie("jwt");
-        function sleep(ms) {
-          ms += new Date().getTime();
-          while (new Date() < ms) {}
+        function sleep(milliseconds) {
+          var start = new Date().getTime();
+          for (var i = 0; i < 1e7; i++) {
+            if (new Date().getTime() - start > milliseconds) {
+              break;
+            }
+          }
         }
         _ember.default.$.ajax({
           type: "PATCH",
@@ -922,6 +926,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+2710cf94"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+78759e98"});
 }
 //# sourceMappingURL=lab9.map

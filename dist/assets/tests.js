@@ -37,7 +37,7 @@ define('lab9/tests/app.lint-test', [], function () {
 
   QUnit.test('controllers/graph.js', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'controllers/graph.js should pass ESLint\n\n223:33 - Empty block statement. (no-empty)');
+    assert.ok(true, 'controllers/graph.js should pass ESLint\n\n');
   });
 
   QUnit.test('controllers/index.js', function (assert) {

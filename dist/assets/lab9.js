@@ -916,6 +916,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+9bf5d7f1"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+c4190cb6"});
 }
 //# sourceMappingURL=lab9.map

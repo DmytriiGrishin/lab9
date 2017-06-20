@@ -360,7 +360,8 @@ define("lab9/controllers/graph", ["exports", "ember"], function (exports, _ember
             ths.set('rerrorMesag', ths.get("rerrorMesag"));
             var points = ths.get("store").findAll("point");
             points.forEach(function (point) {
-              point.set("r", rInp).then(function () {
+              point.set("r", ths.get("rInp"));
+              point.save().then(function () {
                 ths.get("drawPoints")(ths);
               });
             });
@@ -915,6 +916,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+8bf59b4b"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+9bf5d7f1"});
 }
 //# sourceMappingURL=lab9.map

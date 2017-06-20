@@ -135,8 +135,8 @@ define('lab9/components/welcome-page', ['exports', 'ember-welcome-page/component
     }
   });
 });
-define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember) {
-  'use strict';
+define("lab9/controllers/graph", ["exports", "ember"], function (exports, _ember) {
+  "use strict";
 
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -145,6 +145,9 @@ define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember
     init: function init() {
       this._super();
       _ember.default.run.schedule("afterRender", this, function () {
+        this.get("store").findAll("point").forEach(function (point) {
+          point.set("r", this.get("rInp"));
+        });
         this.get('drawPoints')(this);
       });
     },
@@ -357,7 +360,9 @@ define('lab9/controllers/graph', ['exports', 'ember'], function (exports, _ember
             ths.set('rerrorMesag', ths.get("rerrorMesag"));
             var points = ths.get("store").findAll("point");
             points.forEach(function (point) {
-              point.set("r", rInp);
+              point.set("r", rInp).then(function () {
+                ths.get("drawPoints")(ths);
+              });
             });
           },
           error: function error() {
@@ -910,6 +915,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+a181784b"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+8bf59b4b"});
 }
 //# sourceMappingURL=lab9.map

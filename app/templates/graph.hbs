@@ -1,17 +1,5 @@
 {{outlet}}
-<script>
-  function drawPoint(context, x, y, isInside){
-    context.beginPath();
-    if(isInside){
-      context.fillStyle = "Green";
-    } else {
-      context.fillStyle = "Black";
-    }
-    context.arc(x, y, 3, 0*Math.PI, 2*Math.PI);
-    context.fill();
-  }
-</script>
-{{canvas-graph r=rInp}}
+<canvas class="brd" id="graph" onClick={{action "click"}} width="400" height="400"></canvas>
 <br>
 X: <select onchange={{action "xchangeListener" value="target.value"}}>
   {{#each xVars as |value|}}
@@ -19,12 +7,30 @@ X: <select onchange={{action "xchangeListener" value="target.value"}}>
   {{/each}}
 </select>
 <br>
-Y: <input type="text" onchange={{action "ychangeListener" value="target.value"}}>
-<br>
+Y: <input type="text" placeholder="-3..3" onchange={{action "ychangeListener" value="target.value"}}><div color="RED">{{yerrorMesag}}</div>
 R: <select onchange={{action "rchangeListener" value="target.value"}}>
   {{#each xVars as |value|}}
     <option value={{value}}>{{value}}</option>
   {{/each}}
-</select>
-<br>
+</select><div color="RED">{{rerrorMesag}}</div>
 <input type="button" onclick={{action "sendPoint" }} value="Check point"/>
+<input type="button" onclick={{action "deletePoint" }} value="Delete all points"/>
+<input type="button" onclick={{action "logOut" }} value="Logout"/>
+<table>
+  {{#if points}}
+    <tr>
+      <th>X</th>
+      <th>Y</th>
+      <th>R</th>
+      <th>is Included</th>
+    </tr>
+    {{#each points as |point|}}
+      <tr>
+      <th>{{point.x}}</th>
+      <th>{{point.y}}</th>
+      <th>{{point.r}}</th>
+      <th>{{point.isIn}}</th>
+      </tr>
+    {{/each}}
+  {{/if}}
+</table>

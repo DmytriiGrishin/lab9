@@ -1,3 +1,7 @@
-<input type="text" value="{{urername}}">
-<input type="text" value="{{password}}">
-<input type="button" onclick="{{action userLogin}}">
+<input type="text" placeholder="User name" value="{{urername}}" onchange={{action "nameChanged" value="target.value"}}>
+<input type="password" placeholder="Password" value="{{password}}" onchange={{action "passChanged" value="target.value"}}><br>
+<input type="button" {{action "userLogin"}} value="Log in"> <input type="button" {{action "toReg"}} value="Registration"/>
+{{#if isError}}
+  <div>Can't log in!</div>
+{{/if}}
+{{outlet}}

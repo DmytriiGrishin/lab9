@@ -369,7 +369,7 @@ define("lab9/controllers/graph", ["exports", "ember"], function (exports, _ember
           error: function error() {
             ths.set('rerrorMesag', "Can't update");
           },
-          url: "/points?r=" + rInp
+          url: "/points?r=" + ths.get("rInp")
         });
       },
       ychangeListener: function ychangeListener(yInp) {
@@ -916,6 +916,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+d7674458"});
+  require("lab9/app")["default"].create({"name":"lab9","version":"0.0.0+1205e303"});
 }
 //# sourceMappingURL=lab9.map
